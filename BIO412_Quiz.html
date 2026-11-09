@@ -1,0 +1,3433 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🧬 BIO412 Quiz — Biological Sequence Analysis (37 Qs + Full Explanations)</title>
+<style>
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4338ca;
+  --primary-light: #eef2ff;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --bg: #f5f3ff;
+  --card: #ffffff;
+  --text: #1e1b4b;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --radius: 18px;
+  --shadow: 0 4px 28px rgba(99,102,241,0.10);
+  --shadow-hover: 0 8px 32px rgba(99,102,241,0.18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 60px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══ HEADER ══ */
+.header {
+  background: linear-gradient(135deg, #4338ca 0%, #6366f1 60%, #818cf8 100%);
+  color: #fff;
+  padding: clamp(18px,4vw,28px) clamp(16px,4vw,24px) clamp(14px,3vw,20px);
+  text-align: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 20px rgba(67,56,202,0.3);
+}
+.header h1 { font-size: clamp(1rem,4vw,1.3rem); font-weight: 800; letter-spacing:.3px; }
+.header p  { font-size: clamp(0.72rem,2.5vw,0.82rem); opacity:.88; margin-top:3px; }
+.progress-bar-wrap { background: rgba(255,255,255,0.22); border-radius:20px; height:7px; margin-top:12px; overflow:hidden; }
+.progress-bar-fill { height:100%; background:#fff; border-radius:20px; transition: width .4s ease; }
+.progress-text { font-size:clamp(0.7rem,2.2vw,0.78rem); opacity:.9; margin-top:5px; font-weight:600; }
+
+/* ══ SCREENS ══ */
+.screen { display:none; }
+.screen.active { display:block; }
+
+/* ══════════════════════
+   HOME SCREEN
+══════════════════════ */
+.home-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: clamp(16px,4vw,28px) clamp(12px,4vw,20px);
+}
+
+.home-hero {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: clamp(22px,5vw,32px) clamp(16px,4vw,24px);
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  border: 1.5px solid rgba(99,102,241,0.08);
+}
+.home-hero .big-emoji { font-size: clamp(2.4rem,8vw,3.2rem); margin-bottom:10px; }
+.home-hero h2 { font-size: clamp(1.1rem,4vw,1.4rem); font-weight:800; color:var(--primary-dark); }
+.home-hero p  { color:var(--muted); font-size:clamp(0.8rem,2.8vw,0.9rem); margin-top:8px; line-height:1.65; }
+
+.stats-row {
+  display:flex; gap:10px; margin-top:18px;
+}
+.stat-pill {
+  flex:1; background:var(--primary-light);
+  border-radius:12px; padding:10px 6px; text-align:center;
+}
+.stat-pill .sn { font-size:clamp(1rem,4vw,1.3rem); font-weight:800; color:var(--primary-dark); }
+.stat-pill .sl { font-size:clamp(0.62rem,2vw,0.72rem); color:var(--muted); font-weight:600; margin-top:2px; }
+
+/* mode toggle */
+.mode-section { margin-bottom:20px; }
+.mode-label { font-size:clamp(0.7rem,2.5vw,0.78rem); font-weight:800; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
+.mode-toggle {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+.mode-card {
+  background:var(--card); border:2.5px solid var(--border);
+  border-radius:14px; padding:clamp(14px,3.5vw,20px) 10px;
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  cursor:pointer; font-size:clamp(0.82rem,2.8vw,0.92rem); font-weight:700;
+  color:var(--muted); transition:all .2s; user-select:none;
+}
+.mode-card .mc-icon { font-size:clamp(1.4rem,5vw,1.8rem); }
+.mode-card .mc-desc { font-size:clamp(0.65rem,2.2vw,0.73rem); font-weight:500; color:var(--muted); text-align:center; }
+.mode-card:hover { border-color:var(--primary); background:var(--primary-light); color:var(--primary-dark); }
+.mode-card.sel { border-color:var(--primary); background:var(--primary-light); color:var(--primary-dark); }
+.mode-card.sel .mc-desc { color:var(--primary); }
+
+.start-btn {
+  width:100%;
+  background: linear-gradient(135deg, #4338ca, #6366f1);
+  color:#fff; border:none; border-radius:16px;
+  padding:clamp(15px,4vw,20px);
+  font-size:clamp(0.95rem,3.5vw,1.1rem); font-weight:800;
+  cursor:pointer; letter-spacing:.3px;
+  box-shadow: 0 6px 20px rgba(67,56,202,0.3);
+  transition: transform .15s, box-shadow .15s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.start-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(67,56,202,0.4); }
+.start-btn:active { transform:translateY(0); }
+
+/* lecture badges */
+.lec-badges {
+  display:flex; flex-wrap:wrap; gap:7px; margin:16px 0 4px;
+  justify-content: center;
+}
+.lec-badge {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:20px; padding:5px 12px;
+  font-size:clamp(0.68rem,2.2vw,0.76rem); font-weight:700; color:var(--muted);
+  white-space:nowrap;
+}
+.lec-badges-label { font-size:clamp(0.66rem,2vw,0.74rem); color:var(--muted); text-align:center; margin-bottom:4px; font-weight:600; }
+
+
+/* ══ ملحوظة على سؤال معيّن ══ */
+.q-note {
+  display: block;
+  background: rgba(245,158,11,.12);
+  border: 1.5px solid rgba(245,158,11,.45);
+  border-right: 5px solid #f59e0b;
+  border-radius: 12px; padding: 10px 12px; margin: 0 0 10px;
+  font-size: clamp(.72rem,2.4vw,.82rem); font-weight: 700; line-height: 1.7;
+  color: var(--text); text-align: right; direction: rtl;
+}
+.q-note bdi { font-weight: 800; color: #b45309; unicode-bidi: isolate; }
+body.dark-mode .q-note { background: rgba(245,158,11,.10); }
+body.dark-mode .q-note bdi { color: #fbbf24; }
+
+/* ══════════════════════
+   QUIZ SCREEN
+══════════════════════ */
+.quiz-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(14px,3.5vw,22px) clamp(12px,4vw,18px);
+}
+
+.set-banner {
+  background: linear-gradient(135deg,#4338ca,#818cf8);
+  color:#fff; border-radius:12px; padding:10px 16px;
+  font-size:clamp(0.75rem,2.5vw,0.85rem); font-weight:700;
+  margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+
+.q-card {
+  background:var(--card); border-radius:var(--radius);
+  padding:clamp(18px,4vw,26px) clamp(14px,4vw,22px);
+  box-shadow:var(--shadow); margin-bottom:14px;
+  border:1.5px solid rgba(99,102,241,0.07);
+}
+.q-meta {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:14px; flex-wrap:wrap; gap:6px;
+}
+.q-badge {
+  background:var(--primary-light); color:var(--primary-dark);
+  font-size:clamp(0.68rem,2.2vw,0.76rem); font-weight:800;
+  padding:5px 12px; border-radius:20px;
+}
+.q-lec-tag {
+  font-size:clamp(0.64rem,2vw,0.72rem); color:var(--muted);
+  background:#f9fafb; padding:4px 11px; border-radius:20px;
+  font-weight:600; border:1px solid var(--border);
+}
+.q-text {
+  font-size:clamp(0.9rem,3vw,1.02rem); font-weight:700;
+  line-height:1.65; margin-bottom:18px; color:var(--text);
+}
+
+/* options */
+.opts { display:flex; flex-direction:column; gap:clamp(8px,2vw,11px); }
+.opt-btn {
+  background:#fafafa; border:2px solid var(--border);
+  border-radius:13px; padding:clamp(11px,3vw,15px) clamp(12px,3.5vw,16px);
+  font-size:clamp(0.84rem,2.8vw,0.93rem); font-weight:500; color:var(--text);
+  cursor:pointer; text-align:left;
+  display:flex; align-items:center; gap:12px;
+  transition:all .18s; width:100%; line-height:1.45;
+}
+.opt-btn:hover:not(:disabled) {
+  border-color:var(--primary); background:var(--primary-light);
+  transform:translateX(4px);
+}
+.opt-btn .ol {
+  min-width:30px; height:30px; background:#fff; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:clamp(0.72rem,2.2vw,0.8rem); color:var(--muted);
+  flex-shrink:0; border:2px solid var(--border); transition:all .18s;
+}
+.opt-btn.correct { border-color:var(--success); background:#f0fdf4; color:#15803d; }
+.opt-btn.correct .ol { background:var(--success); color:#fff; border-color:var(--success); }
+.opt-btn.wrong   { border-color:var(--danger);  background:#fef2f2; color:#dc2626; }
+.opt-btn.wrong   .ol { background:var(--danger);  color:#fff; border-color:var(--danger); }
+.opt-btn:disabled { cursor:default; }
+
+/* feedback */
+.fb-box {
+  margin-top:13px; padding:clamp(10px,3vw,14px) clamp(13px,3.5vw,16px);
+  border-radius:12px; font-size:clamp(0.8rem,2.5vw,0.88rem);
+  font-weight:600; display:none; align-items:flex-start; gap:8px; line-height:1.5;
+}
+.fb-box.show { display:flex; }
+.fb-box.correct { background:#f0fdf4; color:#15803d; border:1.5px solid #bbf7d0; }
+.fb-box.wrong   { background:#fef2f2; color:#dc2626;  border:1.5px solid #fecaca; }
+
+/* nav */
+.nav-row { display:flex; gap:10px; margin-top:14px; }
+.nav-btn {
+  flex:1; padding:clamp(13px,3.5vw,16px);
+  border:none; border-radius:13px;
+  font-size:clamp(0.88rem,3vw,0.97rem); font-weight:700;
+  cursor:pointer; transition:all .18s;
+}
+.btn-next {
+  background:linear-gradient(135deg,#4338ca,#6366f1);
+  color:#fff; box-shadow:0 4px 14px rgba(67,56,202,.3); display:none;
+}
+.btn-next.show { display:block; }
+.btn-next:hover { transform:translateY(-2px); }
+.btn-skip { background:#f3f4f6; color:var(--muted); border:2px solid var(--border); }
+.btn-skip:hover { border-color:var(--primary); color:var(--primary-dark); background:var(--primary-light); }
+
+/* Show Result Early button */
+.show-result-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  padding: clamp(13px,3.5vw,16px);
+  font-size: clamp(0.88rem,3vw,0.97rem);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(239,68,68,0.3);
+  transition: all .18s;
+  margin-top: 14px;
+}
+.show-result-btn:hover { transform: translateY(-2px); }
+
+/* ══════════════════════
+   RESULT SCREEN
+══════════════════════ */
+.res-wrap {
+  max-width: 520px;
+  margin: clamp(20px,5vw,36px) auto 0;
+  padding: 0 clamp(12px,4vw,18px);
+}
+.res-card {
+  background:var(--card); border-radius:var(--radius);
+  padding:clamp(24px,5vw,36px) clamp(18px,4vw,28px);
+  box-shadow:var(--shadow); text-align:center;
+  border:1.5px solid rgba(99,102,241,0.07);
+}
+.res-emoji { font-size:clamp(3rem,10vw,4rem); margin-bottom:10px; }
+.res-title { font-size:clamp(1.25rem,5vw,1.5rem); font-weight:800; }
+.res-sub   { color:var(--muted); font-size:clamp(0.82rem,2.8vw,0.9rem); margin:7px 0 20px; }
+
+.score-ring {
+  width:clamp(110px,30vw,130px); height:clamp(110px,30vw,130px);
+  border-radius:50%; margin:0 auto 22px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-weight:800; border:8px solid;
+}
+.score-ring .pct  { font-size:clamp(1.6rem,6vw,2rem); line-height:1; }
+.score-ring .slbl { font-size:clamp(0.65rem,2vw,0.74rem); font-weight:600; opacity:.72; }
+
+.res-grid {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:clamp(7px,2vw,10px); margin-bottom:22px;
+}
+.res-stat { background:var(--bg); border-radius:12px; padding:clamp(11px,3vw,15px) 6px; }
+.res-stat .rn { font-size:clamp(1.2rem,5vw,1.5rem); font-weight:800; }
+.res-stat .rl { font-size:clamp(0.62rem,2vw,0.7rem); color:var(--muted); font-weight:600; margin-top:2px; }
+
+.res-acts { display:flex; flex-direction:column; gap:9px; }
+.res-acts button {
+  padding:clamp(13px,3.5vw,16px); border:none; border-radius:13px;
+  font-size:clamp(0.88rem,3vw,0.97rem); font-weight:700; cursor:pointer; transition:all .18s;
+}
+.btn-retry   { background:linear-gradient(135deg,#4338ca,#6366f1); color:#fff; box-shadow:0 4px 14px rgba(67,56,202,.25); }
+.btn-retry:hover { transform:translateY(-2px); }
+.btn-review2 { background:var(--bg); color:var(--primary-dark); border:2px solid var(--primary) !important; }
+.btn-home2   { background:var(--bg); color:var(--muted); border:2px solid var(--border) !important; }
+
+/* ══════════════════════
+   REVIEW SCREEN
+══════════════════════ */
+.rev-wrap {
+  max-width:640px; margin:0 auto;
+  padding:clamp(14px,4vw,22px) clamp(12px,4vw,18px);
+}
+.rev-hdr { text-align:center; margin-bottom:18px; }
+.rev-hdr h2 { font-size:clamp(1rem,4vw,1.2rem); font-weight:800; }
+.rev-hdr p  { color:var(--muted); font-size:clamp(0.76rem,2.5vw,0.85rem); margin-top:4px; }
+
+.rev-item {
+  background:var(--card); border-radius:var(--radius);
+  padding:clamp(14px,3.5vw,20px) clamp(13px,3.5vw,18px);
+  margin-bottom:12px; box-shadow:var(--shadow);
+  border-left:5px solid #e5e7eb;
+}
+.rev-item.correct { border-left-color:var(--success); }
+.rev-item.wrong   { border-left-color:var(--danger);  }
+.rev-item.skipped { border-left-color:var(--warning); }
+
+.rev-q { font-size:clamp(0.83rem,2.8vw,0.92rem); font-weight:700; margin-bottom:8px; line-height:1.55; }
+.rev-lec { font-size:clamp(0.63rem,2vw,0.7rem); color:var(--muted); background:var(--bg); padding:2px 9px; border-radius:20px; font-weight:600; display:inline-block; margin-bottom:9px; border:1px solid var(--border); }
+.rev-opts { display:flex; flex-direction:column; gap:5px; }
+.rev-opt {
+  padding:clamp(7px,2vw,9px) clamp(10px,3vw,13px); border-radius:9px;
+  font-size:clamp(0.77rem,2.5vw,0.85rem); font-weight:500;
+  display:flex; align-items:flex-start; gap:7px; line-height:1.45;
+}
+.rev-opt.co { background:#f0fdf4; color:#15803d; }
+.rev-opt.wo { background:#fef2f2; color:#dc2626; }
+.rev-opt.no { background:#f9fafb; color:var(--muted); }
+
+.back-btn2 {
+  display:block; width:100%;
+  padding:clamp(13px,3.5vw,16px);
+  background:linear-gradient(135deg,#4338ca,#6366f1);
+  color:#fff; border:none; border-radius:13px;
+  font-size:clamp(0.88rem,3vw,0.97rem); font-weight:700;
+  cursor:pointer; margin-top:14px; margin-bottom:30px;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:#c4b5fd; border-radius:3px; }
+
+/* responsive tweaks */
+@media (max-width:400px) {
+  .mode-toggle { grid-template-columns:1fr 1fr; }
+  .res-grid { grid-template-columns:1fr 1fr 1fr; }
+}
+@media (min-width:640px) {
+  .opts { gap:10px; }
+  .q-card { padding:28px 26px; }
+}
+
+/* 🌙 PREMIUM SOOTHING DARK MODE ══ */
+body.dark-mode {
+  --bg: #0f172a; /* Soft Slate 900 */
+  --card: #1e293b; /* Soft Slate 800 */
+  --text: #cbd5e1; /* Off-white Slate 300 - extremely easy on the eyes */
+  --muted: #94a3b8; /* Slate 400 */
+  --border: #334155; /* Slate 700 */
+  --primary-light: #1e1b4b; /* Deep Indigo bg */
+  --shadow: 0 4px 28px rgba(0,0,0,0.5);
+  --shadow-hover: 0 8px 32px rgba(99,102,241,0.2);
+  --primary: #818cf8; /* Soft Indigo */
+  --primary-dark: #6366f1;
+}
+
+body.dark-mode .header {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .opt-btn {
+  background: #111827;
+  color: #cbd5e1;
+  border-color: #334155;
+}
+body.dark-mode .opt-btn:hover:not(:disabled) {
+  border-color: #818cf8;
+  background: #1e1b4b;
+  color: #e2e8f0;
+}
+body.dark-mode .opt-btn .ol {
+  background: #1f2937;
+  border-color: #334155;
+  color: #94a3b8;
+}
+body.dark-mode .opt-btn.correct {
+  border-color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+}
+body.dark-mode .opt-btn.correct .ol {
+  background: #22c55e;
+  color: #fff;
+  border-color: #22c55e;
+}
+body.dark-mode .opt-btn.wrong {
+  border-color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+}
+body.dark-mode .opt-btn.wrong .ol {
+  background: #ef4444;
+  color: #fff;
+  border-color: #ef4444;
+}
+body.dark-mode .q-lec-tag {
+  background: #1e293b;
+  color: #94a3b8;
+  border-color: #334155;
+}
+body.dark-mode .btn-skip {
+  background: #1e293b;
+  color: #cbd5e1;
+  border-color: #334155;
+}
+body.dark-mode .btn-skip:hover {
+  border-color: #818cf8;
+  color: #e2e8f0;
+  background: #1e1b4b;
+}
+body.dark-mode .rev-item {
+  border-left-width: 5px;
+}
+body.dark-mode .rev-opt.no {
+  background: #111827;
+  color: #94a3b8;
+  border-color: #334155;
+}
+body.dark-mode .rev-opt.co {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+  border-color: #22c55e;
+}
+body.dark-mode .rev-opt.wo {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+  border-color: #ef4444;
+}
+body.dark-mode .rev-lec {
+  background: #111827;
+  color: #94a3b8;
+  border-color: #334155;
+}
+body.dark-mode ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+body.dark-mode .res-stat {
+  background: #111827;
+}
+body.dark-mode .btn-review2, body.dark-mode .btn-home2 {
+  background: #111827;
+}
+body.dark-mode .stat-pill {
+  background: #1e1b4b;
+}
+body.dark-mode .lec-badge {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+body.dark-mode #resumeBox {
+  background: #1e1b4b !important;
+  border-color: #4f46e5 !important;
+}
+
+/* 🎨 PREMIUM QBANK HIGHLIGHTS (UNIFIED SYMMETRICAL DESIGN) ══ */
+.qbank-opt {
+  background: #fafafa !important; /* Standard clean background */
+  color: var(--text) !important;
+  border: 1.5px solid var(--border) !important;
+  padding: 11px 15px !important;
+  border-radius: 12px !important;
+  margin-top: 6px !important;
+  font-weight: 500 !important;
+  font-size: 0.88rem !important;
+  text-align: left !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important; /* Pushes text to left and checkmark to right! */
+  gap: 10px !important;
+  transition: all 0.2s ease;
+  opacity: 1.0 !important; /* Fully opaque, clear and readable! */
+  width: 100% !important;
+}
+body.dark-mode .qbank-opt {
+  background: #1e293b !important; /* Slate 800 */
+  border-color: #334155 !important;
+}
+
+.qbank-opt.correct {
+  background: #ecfdf5 !important; /* Soothing premium green background */
+  border-color: #10b981 !important;
+  color: #065f46 !important;
+  font-weight: 700 !important;
+}
+body.dark-mode .qbank-opt.correct {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #4ade80 !important;
+  border-color: #10b981 !important;
+}
+
+/* 📚 NEW PREMIUM QUESTION BANK DESIGN ══ */
+.qbank-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.015);
+  transition: all 0.25s ease;
+  position: relative;
+}
+body.dark-mode .qbank-card {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.qbank-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99,102,241,0.06);
+}
+body.dark-mode .qbank-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.qbank-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.qbank-num-badge {
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(99,102,241,0.08);
+}
+
+.qbank-lec-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+.qbank-star-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.qbank-star-btn:hover {
+  transform: scale(1.2);
+}
+
+.qbank-question-text {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+/* Premium Filter Buttons in QBank */
+#qbankFilters .lec-badge {
+  background: var(--card);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  font-weight: bold;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.01);
+}
+#qbankFilters .lec-badge:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+/* 🎛️ TOGGLE SWITCH STYLES ══ */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--border);
+  transition: .3s;
+  border-radius: 22px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+.switch input:checked + .slider {
+  background-color: #10b981;
+}
+.switch input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* ══════════════════════════════════════════
+   📝 ESSAY QUESTION BANK (بنك الأسئلة المقالية)
+══════════════════════════════════════════ */
+.essay-toolbar {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;
+}
+.essay-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: clamp(14px, 3.5vw, 20px) clamp(14px, 3.8vw, 20px);
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  border: 1.5px solid rgba(99,102,241,0.07);
+  border-left: 6px solid var(--primary);
+  transition: box-shadow .2s, transform .2s;
+}
+.essay-card:hover { box-shadow: var(--shadow-hover); }
+.essay-card.studied { border-left-color: #10b981; }
+.essay-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 8px; margin-bottom: 10px; flex-wrap: wrap;
+}
+.essay-badges { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.essay-num {
+  background: rgba(99,102,241,0.08); color: var(--primary-dark);
+  border-radius: 20px; padding: 3px 10px;
+  font-size: clamp(0.66rem,2.1vw,0.74rem); font-weight: 800;
+}
+.essay-lec-badge {
+  background: rgba(16,185,129,0.10); color: #059669;
+  border-radius: 20px; padding: 3px 10px;
+  font-size: clamp(0.62rem,2vw,0.7rem); font-weight: 800;
+}
+.essay-q-text {
+  font-size: clamp(0.9rem,3vw,1rem); font-weight: 800; color: var(--text);
+  line-height: 1.6; text-align: left;
+}
+.essay-q-text .en { display:block; }
+.essay-actions {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;
+}
+.essay-btn {
+  border: 2px solid var(--primary); background: var(--primary-light);
+  color: var(--primary-dark); border-radius: 12px;
+  padding: 9px 14px; font-size: clamp(0.72rem,2.4vw,0.82rem); font-weight: 800;
+  cursor: pointer; transition: all .18s; display: inline-flex; align-items: center; gap: 6px;
+}
+.essay-btn:hover { background: var(--primary); color: #fff; transform: translateY(-1px); }
+.essay-btn.ghost {
+  border-color: var(--border); background: transparent; color: var(--muted);
+}
+.essay-btn.ghost:hover { border-color: #10b981; color: #10b981; background: rgba(16,185,129,0.08); transform: none; }
+.essay-btn.done-on {
+  border-color: #10b981; background: rgba(16,185,129,0.12); color: #059669;
+}
+.essay-answer {
+  display: none; margin-top: 14px;
+  border-top: 2px dashed var(--border); padding-top: 12px;
+  animation: essayFade .28s ease;
+}
+.essay-answer.show { display: block; }
+@keyframes essayFade { from { opacity:0; transform: translateY(-4px);} to {opacity:1; transform:none;} }
+.essay-answer-head {
+  font-size: clamp(0.72rem,2.4vw,0.8rem); font-weight: 800; color: #059669;
+  letter-spacing: .4px; text-transform: uppercase; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.essay-answer h4 {
+  font-size: clamp(0.8rem,2.6vw,0.9rem); font-weight: 800; color: var(--primary-dark);
+  margin: 10px 0 6px; text-align: left;
+}
+.essay-answer p {
+  font-size: clamp(0.8rem,2.6vw,0.9rem); line-height: 1.75; color: var(--text);
+  margin-bottom: 8px; text-align: left;
+}
+.essay-answer ul { list-style: none; margin: 4px 0 8px; padding: 0; }
+.essay-answer li {
+  position: relative; padding-left: 18px; margin-bottom: 6px;
+  font-size: clamp(0.78rem,2.5vw,0.88rem); line-height: 1.7; color: var(--text);
+  text-align: left;
+}
+.essay-answer li::before {
+  content: '▸'; position: absolute; left: 2px; top: 0;
+  color: var(--primary); font-weight: 800;
+}
+.essay-answer li strong, .essay-answer p strong { color: var(--primary-dark); }
+.essay-arrow {
+  font-size: clamp(0.78rem,2.5vw,0.88rem); font-weight: 800; color: var(--primary-dark);
+  text-align: center; letter-spacing: 1px; margin: 8px 0;
+  background: var(--primary-light); border-radius: 10px; padding: 7px 10px;
+}
+.essay-progress-wrap {
+  background: var(--card); border-radius: 14px; padding: 12px 14px;
+  border: 1.5px solid var(--border); margin-bottom: 14px;
+}
+.essay-progress-top {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: clamp(0.7rem,2.3vw,0.8rem); font-weight: 800; color: var(--muted); margin-bottom: 8px;
+}
+.essay-progress-bar { height: 8px; background: rgba(0,0,0,0.08); border-radius: 20px; overflow: hidden; }
+.essay-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#10b981,#34d399); border-radius: 20px; transition: width .35s ease; }
+body.dark-mode .essay-progress-bar { background: rgba(255,255,255,0.12); }
+.essay-ai-banner {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  text-align: center; font-weight: 900; font-size: 0.9rem; line-height: 1.5;
+  color: #7c3aed; background: linear-gradient(135deg, rgba(168,85,247,0.12), rgba(99,102,241,0.10));
+  border: 2px dashed rgba(168,85,247,0.45); border-radius: 14px;
+  padding: 12px 14px; margin-bottom: 12px;
+}
+body.dark-mode .essay-ai-banner {
+  color: #c9a2fb; background: rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.45);
+}
+.essay-ai-badge {
+  background: rgba(168,85,247,0.12); color: #9333ea;
+  border: 1.5px dashed rgba(168,85,247,0.45);
+  border-radius: 20px; padding: 2px 9px;
+  font-size: clamp(0.6rem,1.9vw,0.68rem); font-weight: 800;
+}
+body.dark-mode .essay-ai-badge { background: rgba(168,85,247,0.18); color: #c084fc; }
+body.dark-mode .essay-num { background: rgba(129,140,248,0.14); color: var(--primary); }
+body.dark-mode .essay-lec-badge { background: rgba(16,185,129,0.16); color: #34d399; }
+body.dark-mode .essay-answer-head { color: #34d399; }
+@media print {
+  .essay-answer { display: block !important; }
+  .essay-actions, .essay-toolbar, .essay-progress-wrap, .header button, .back-btn2 { display: none !important; }
+}
+
+/* ══════════════════════════════════════════
+   🧠 RETENTION GAMES (رتّب الخطوات / وصّل المصطلح)
+══════════════════════════════════════════ */
+.rt-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.rt-tab {
+  background: var(--card); border: 2.5px solid var(--border); border-radius: 13px;
+  padding: 11px 8px; font-size: clamp(0.75rem,2.6vw,0.86rem); font-weight: 800;
+  color: var(--muted); cursor: pointer; transition: all .18s;
+}
+.rt-tab.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); }
+.rt-tab:hover { border-color: var(--primary); }
+
+.rt-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.rt-chip {
+  background: var(--card); border: 2px solid var(--border); border-radius: 20px;
+  padding: 6px 12px; font-size: clamp(0.66rem,2.2vw,0.76rem); font-weight: 800;
+  color: var(--muted); cursor: pointer; transition: all .18s; text-align: left;
+}
+.rt-chip:hover { border-color: var(--primary); color: var(--primary-dark); }
+.rt-chip.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); }
+
+.rt-card {
+  background: var(--card); border-radius: var(--radius); padding: clamp(14px,3.5vw,20px);
+  box-shadow: var(--shadow); border: 1.5px solid rgba(99,102,241,0.07); margin-bottom: 14px;
+}
+.rt-title { font-size: clamp(0.88rem,3vw,1rem); font-weight: 800; color: var(--text); margin-bottom: 4px; text-align: left; }
+.rt-sub { font-size: clamp(0.66rem,2.1vw,0.74rem); font-weight: 700; color: var(--muted); margin-bottom: 12px; text-align: left; }
+.rt-section-label {
+  font-size: clamp(0.64rem,2vw,0.72rem); font-weight: 800; color: var(--muted);
+  letter-spacing: .5px; text-transform: uppercase; margin: 12px 0 8px; text-align: left;
+}
+.rt-step {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--bg); border: 2px solid var(--border); border-radius: 12px;
+  padding: 10px 12px; margin-bottom: 8px; cursor: pointer;
+  transition: all .16s; text-align: left;
+}
+.rt-step:hover { border-color: var(--primary); transform: translateX(2px); }
+.rt-step .rt-num {
+  flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--primary); color: #fff; font-size: 0.72rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.rt-step .rt-txt { flex: 1; }
+.rt-step .rt-en { font-size: clamp(0.76rem,2.4vw,0.86rem); font-weight: 700; color: var(--text); line-height: 1.55; }
+.rt-step .rt-ar { font-size: clamp(0.66rem,2.1vw,0.74rem); color: var(--muted); margin-top: 2px; direction: rtl; }
+.rt-step.pool .rt-num { background: var(--border); color: var(--muted); }
+.rt-step.ok { border-color: #10b981; background: rgba(16,185,129,0.08); }
+.rt-step.ok .rt-num { background: #10b981; }
+.rt-step.bad { border-color: #ef4444; background: rgba(239,68,68,0.07); }
+.rt-step.bad .rt-num { background: #ef4444; }
+.rt-empty {
+  border: 2px dashed var(--border); border-radius: 12px; padding: 16px;
+  text-align: center; font-size: clamp(0.7rem,2.3vw,0.8rem); color: var(--muted); font-weight: 700;
+}
+.rt-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.rt-btn {
+  border: none; border-radius: 12px; padding: 11px 16px; cursor: pointer;
+  font-size: clamp(0.74rem,2.5vw,0.85rem); font-weight: 800; color: #fff;
+  background: linear-gradient(135deg,#4338ca,#6366f1); transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 4px 14px rgba(67,56,202,0.25);
+}
+.rt-btn:hover { transform: translateY(-1px); }
+.rt-btn.ghost { background: transparent; color: var(--muted); border: 2px solid var(--border); box-shadow: none; }
+.rt-btn.ghost:hover { color: var(--primary-dark); border-color: var(--primary); }
+.rt-btn.green { background: linear-gradient(135deg,#10b981,#059669); box-shadow: 0 4px 14px rgba(5,150,105,0.28); }
+.rt-feedback {
+  margin-top: 12px; border-radius: 12px; padding: 12px 14px; font-size: clamp(0.76rem,2.5vw,0.86rem);
+  font-weight: 800; text-align: left; line-height: 1.6;
+}
+.rt-feedback.good { background: rgba(16,185,129,0.12); color: #059669; border: 2px dashed rgba(16,185,129,0.5); }
+.rt-feedback.bad  { background: rgba(239,68,68,0.10); color: #dc2626; border: 2px dashed rgba(239,68,68,0.45); }
+
+/* matching board */
+.rt-board { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.rt-col-title {
+  font-size: clamp(0.66rem,2.1vw,0.74rem); font-weight: 800; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .5px; margin: 6px 0 6px; text-align: left;
+}
+.rt-term {
+  background: var(--primary-light); border: 2.5px solid rgba(99,102,241,0.35); border-radius: 12px;
+  padding: 10px 13px; cursor: pointer; transition: all .16s; text-align: left;
+  font-size: clamp(0.78rem,2.5vw,0.88rem); font-weight: 800; color: var(--primary-dark);
+}
+.rt-term:hover { border-color: var(--primary); transform: translateX(2px); }
+.rt-term.sel { border-color: var(--primary); background: var(--primary); color: #fff; transform: translateX(4px); }
+.rt-term.matched, .rt-def.matched {
+  border-color: #10b981 !important; background: rgba(16,185,129,0.12) !important;
+  color: #059669 !important; cursor: default; opacity: .95; transform: none !important;
+}
+.rt-def {
+  background: var(--bg); border: 2.5px solid var(--border); border-radius: 12px;
+  padding: 10px 13px; cursor: pointer; transition: all .16s; text-align: left;
+  font-size: clamp(0.72rem,2.3vw,0.82rem); font-weight: 600; color: var(--text); line-height: 1.55;
+}
+.rt-def:hover { border-color: var(--primary); }
+.rt-def.wrong, .rt-term.wrong { animation: rtShake .4s ease; border-color: #ef4444 !important; }
+@keyframes rtShake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+.rt-stats {
+  display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.rt-stat {
+  flex: 1; min-width: 90px; background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 9px 8px; text-align: center;
+}
+.rt-stat .n { font-size: clamp(0.95rem,3.4vw,1.15rem); font-weight: 800; color: var(--primary-dark); }
+.rt-stat .l { font-size: clamp(0.6rem,1.9vw,0.68rem); font-weight: 700; color: var(--muted); margin-top: 2px; }
+body.dark-mode .rt-step { background: rgba(255,255,255,0.03); }
+body.dark-mode .rt-term { background: rgba(129,140,248,0.12); }
+
+/* ══════════════════════════════════════════════════════════
+   🌙 DARK MODE v2 — لوحة ألوان مريحة للعين (Soothing palette)
+   بيتحمّل آخر حاجة في الـ CSS فبياخد الأولوية على أي قاعدة قديمة
+══════════════════════════════════════════════════════════ */
+body.dark-mode {
+  --bg: #0e1621;              /* خلفية الصفحة — كحلي هادي */
+  --card: #17222f;            /* الكروت */
+  --text: #dbe4ef;            /* نص أساسي مش أبيض حرّاق */
+  --muted: #93a3b8;           /* نص ثانوي */
+  --border: #27364a;          /* الحدود */
+  --primary: #7f8cf0;         /* البنفسجي الأساسي */
+  --primary-dark: #aab5fb;    /* البنفسجي المستخدم كنص (كان غامق ومش مقروء) */
+  --primary-light: rgba(127,140,240,0.14);
+  --success: #34d399;
+  --danger: #f87171;
+  --warning: #fbbf24;
+  --shadow: 0 6px 26px rgba(0,0,0,0.45);
+  --shadow-hover: 0 10px 30px rgba(0,0,0,0.55);
+  background: var(--bg);
+  color: var(--text);
+}
+body.dark-mode .header {
+  background: linear-gradient(135deg, #1b2440 0%, #2b3563 55%, #414c8c 100%);
+  box-shadow: 0 2px 18px rgba(0,0,0,0.35);
+}
+
+/* ── الكروت والأسطح ── */
+body.dark-mode .q-card,
+body.dark-mode .home-hero,
+body.dark-mode .res-card,
+body.dark-mode .rev-item,
+body.dark-mode .qbank-card,
+body.dark-mode .rt-card,
+body.dark-mode .essay-card {
+  border-color: rgba(148,163,184,0.10);
+}
+body.dark-mode .stat-pill { background: rgba(127,140,240,0.10); }
+body.dark-mode .stat-pill .sl { color: var(--muted); }
+body.dark-mode .stat-pill .sn { color: var(--primary-dark); }
+body.dark-mode .lec-badge,
+body.dark-mode .q-lec-tag,
+body.dark-mode .rev-lec {
+  background: #1b2634;
+  border-color: var(--border);
+  color: var(--muted);
+}
+body.dark-mode .q-badge { background: rgba(127,140,240,0.13); color: var(--primary-dark); }
+
+/* ── الاختيارات في الاختبار ── */
+body.dark-mode .opt-btn {
+  background: #1d2938;
+  border-color: #2b3a4e;
+  color: var(--text);
+}
+body.dark-mode .opt-btn:hover:not(:disabled) {
+  background: rgba(127,140,240,0.10);
+  border-color: var(--primary);
+  color: #e8eef7;
+}
+body.dark-mode .opt-btn .ol {
+  background: #26344a;
+  border-color: #35465e;
+  color: #a8b6c9;
+}
+body.dark-mode .opt-btn.correct {
+  background: rgba(52,211,153,0.09);
+  border-color: #2f7a60;
+  color: #8fe3c2;
+}
+body.dark-mode .opt-btn.correct .ol {
+  background: #2f8f6b; border-color: #2f8f6b; color: #eafff6;
+}
+body.dark-mode .opt-btn.wrong {
+  background: rgba(248,113,113,0.09);
+  border-color: #8a4b4b;
+  color: #f2a8a8;
+}
+body.dark-mode .opt-btn.wrong .ol {
+  background: #a95252; border-color: #a95252; color: #fff5f5;
+}
+
+/* ── صندوق التصحيح (كان لونه بمبي/أبيض فاتح جدًا) ── */
+body.dark-mode .fb-box.correct {
+  background: rgba(52,211,153,0.08);
+  border-color: rgba(52,211,153,0.28);
+  color: #8fe3c2;
+}
+body.dark-mode .fb-box.wrong {
+  background: rgba(248,113,113,0.08);
+  border-color: rgba(248,113,113,0.26);
+  color: #f2a8a8;
+}
+
+/* ── أزرار ── */
+body.dark-mode .btn-skip {
+  background: #1b2634; color: var(--muted); border-color: var(--border);
+}
+body.dark-mode .btn-skip:hover {
+  background: rgba(127,140,240,0.12); color: #e8eef7; border-color: var(--primary);
+}
+body.dark-mode .btn-review2 { background: transparent; color: var(--primary-dark); }
+body.dark-mode .btn-home2 { background: transparent; }
+body.dark-mode .start-btn,
+body.dark-mode .set-banner,
+body.dark-mode .back-btn2,
+body.dark-mode .btn-retry,
+body.dark-mode .btn-next,
+body.dark-mode .show-result-btn {
+  filter: saturate(0.78) brightness(0.94);
+}
+
+/* ── شاشة النتيجة والمراجعة ── */
+body.dark-mode .res-stat { background: #1b2634; }
+body.dark-mode .rev-opt.no { background: #1b2634; color: var(--muted); border:1px solid var(--border); }
+body.dark-mode .rev-opt.co { background: rgba(52,211,153,0.09); color: #8fe3c2; }
+body.dark-mode .rev-opt.wo { background: rgba(248,113,113,0.09); color: #f2a8a8; }
+body.dark-mode .rev-item { border-left-color: #2b3a4e; }
+body.dark-mode #resumeBox {
+  background: rgba(127,140,240,0.08) !important;
+  border-color: rgba(127,140,240,0.45) !important;
+}
+
+/* ── بنك الأسئلة ── */
+body.dark-mode .qbank-opt {
+  background: #1b2634 !important;
+  border-color: #2b3a4e !important;
+  color: var(--text) !important;
+}
+body.dark-mode .qbank-opt.correct {
+  background: rgba(52,211,153,0.10) !important;
+  border-color: #2f7a60 !important;
+  color: #8fe3c2 !important;
+}
+body.dark-mode .qbank-num-badge {
+  background: rgba(127,140,240,0.13) !important;
+  border-color: rgba(127,140,240,0.14) !important;
+  color: var(--primary-dark) !important;
+}
+body.dark-mode .qbank-lec-badge { background: #1b2634; border-color: var(--border); color: var(--muted); }
+body.dark-mode #qbankFilters .lec-badge { background: #1b2634; color: var(--text); border-color: var(--border); }
+
+/* ── بنك الأسئلة المقالية ── */
+body.dark-mode .essay-num { background: rgba(127,140,240,0.14); color: var(--primary-dark); }
+body.dark-mode .essay-lec-badge { background: rgba(52,211,153,0.12); color: #7ddcb8; }
+body.dark-mode .essay-ai-badge { background: rgba(168,85,247,0.16); color: #c9a2fb; border-color: rgba(168,85,247,0.4); }
+body.dark-mode .essay-btn {
+  background: rgba(127,140,240,0.13);
+  border-color: rgba(127,140,240,0.5);
+  color: var(--primary-dark);
+}
+body.dark-mode .essay-btn:hover { background: #5b63c9; color: #f2f5ff; border-color: #5b63c9; }
+body.dark-mode .essay-btn.ghost { background: transparent; border-color: var(--border); color: var(--muted); }
+body.dark-mode .essay-btn.ghost:hover { background: rgba(52,211,153,0.10); border-color: #2f7a60; color: #8fe3c2; }
+body.dark-mode .essay-answer { border-top-color: var(--border); }
+body.dark-mode .essay-answer h4,
+body.dark-mode .essay-answer li strong,
+body.dark-mode .essay-answer p strong { color: var(--primary-dark); }
+body.dark-mode .essay-answer-head { color: #7ddcb8; }
+body.dark-mode .essay-arrow { background: rgba(127,140,240,0.13); color: var(--primary-dark); }
+body.dark-mode .essay-progress-wrap { background: var(--card); border-color: var(--border); }
+body.dark-mode .essay-progress-bar { background: rgba(255,255,255,0.10); }
+
+/* ── ألعاب الاسترجاع ── */
+body.dark-mode .rt-tab { background: #1b2634; border-color: #2b3a4e; color: var(--muted); }
+body.dark-mode .rt-tab.active { background: rgba(127,140,240,0.14); border-color: var(--primary); color: var(--primary-dark); }
+body.dark-mode .rt-chip { background: #1b2634; border-color: #2b3a4e; color: var(--muted); }
+body.dark-mode .rt-chip:hover { border-color: var(--primary); color: var(--primary-dark); }
+body.dark-mode .rt-chip.active { background: rgba(127,140,240,0.14); border-color: var(--primary); color: var(--primary-dark); }
+body.dark-mode .rt-step { background: #1b2634; border-color: #2b3a4e; }
+body.dark-mode .rt-step:hover { border-color: var(--primary); }
+body.dark-mode .rt-step.pool .rt-num { background: #2b3a4e; color: #a8b6c9; }
+body.dark-mode .rt-step.ok { background: rgba(52,211,153,0.09); border-color: #2f7a60; }
+body.dark-mode .rt-step.ok .rt-num { background: #2f8f6b; }
+body.dark-mode .rt-step.bad { background: rgba(248,113,113,0.09); border-color: #8a4b4b; }
+body.dark-mode .rt-step.bad .rt-num { background: #a95252; }
+body.dark-mode .rt-term {
+  background: rgba(127,140,240,0.13);
+  border-color: rgba(127,140,240,0.35);
+  color: var(--primary-dark);
+}
+body.dark-mode .rt-term.sel { background: #5b63c9; border-color: #5b63c9; color: #f2f5ff; }
+body.dark-mode .rt-def { background: #1b2634; border-color: #2b3a4e; color: var(--text); }
+body.dark-mode .rt-term.matched,
+body.dark-mode .rt-def.matched {
+  background: rgba(52,211,153,0.11) !important;
+  border-color: #2f7a60 !important;
+  color: #8fe3c2 !important;
+}
+body.dark-mode .rt-btn.ghost { background: transparent; border-color: var(--border); color: var(--muted); }
+body.dark-mode .rt-btn.ghost:hover { border-color: var(--primary); color: var(--primary-dark); }
+body.dark-mode .rt-feedback.good { background: rgba(52,211,153,0.09); border-color: rgba(52,211,153,0.30); color: #8fe3c2; }
+body.dark-mode .rt-feedback.bad  { background: rgba(248,113,113,0.09); border-color: rgba(248,113,113,0.28); color: #f2a8a8; }
+body.dark-mode .rt-stat { background: #1b2634; border-color: var(--border); }
+body.dark-mode .rt-stat .n { color: var(--primary-dark); }
+body.dark-mode .rt-empty { border-color: #2b3a4e; color: var(--muted); }
+body.dark-mode .essay-answer table th { background: rgba(127,140,240,0.16) !important; color: var(--primary-dark) !important; }
+body.dark-mode .essay-answer table td { color: var(--text) !important; border-color: var(--border) !important; }
+
+/* ── خانات الإدخال ── */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #1b2634 !important;
+  color: var(--text) !important;
+  border-color: #2b3a4e !important;
+}
+body.dark-mode input::placeholder { color: #7b8aa0; }
+body.dark-mode select option { background: #17222f; color: var(--text); }
+body.dark-mode mark { background: #a16207 !important; color: #fff8e1 !important; }
+
+/* ── سكرول ── */
+body.dark-mode ::-webkit-scrollbar-track { background: var(--bg); }
+body.dark-mode ::-webkit-scrollbar-thumb { background: #33445c; border-radius: 20px; }
+
+/* ── تظبيطات أخيرة ── */
+.set-banner { flex-wrap: wrap; }
+.set-banner > span { flex-basis: 100%; }
+body.dark-mode .set-banner { filter: saturate(0.68) brightness(0.9); }
+body.dark-mode #quizScreen > div[style*="position: fixed"] { box-shadow: 0 -4px 15px rgba(0,0,0,0.4); }
+body.dark-mode #quizScreen > div[style*="position: fixed"] button { filter: saturate(0.7) brightness(0.92); }
+body.dark-mode .essay-card.studied { border-left-color: #2f8f6b; }
+body.dark-mode .home-hero h2 { color: var(--primary-dark); }
+body.dark-mode .mode-label,
+body.dark-mode .lec-badges-label { color: var(--muted); }
+
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<div class="header" id="mainHeader" style="position: relative;">
+  <h1>🧬 BIO412 Quiz</h1>
+  <p>Biological Sequence Analysis • <bdi>37 MCQ</bdi> + <bdi>13</bdi> مقالي <bdi>AI</bdi></p>
+  <button id="homeBtn" onclick="goHome()" style="display: none; position: absolute; top: clamp(12px, 3.5vw, 18px); left: clamp(12px, 3.5vw, 18px); background: rgba(255,255,255,0.18); border: none; border-radius: 50%; width: 38px; height: 38px; color: #fff; cursor: pointer; align-items: center; justify-content: center; font-size: 1.15rem; transition: all 0.2s; z-index: 101;" title="العودة للرئيسية">🏠</button>
+  <button id="themeToggleBtn" onclick="toggleDarkMode()" style="position: absolute; top: clamp(12px, 3.5vw, 18px); right: clamp(12px, 3.5vw, 18px); background: rgba(255,255,255,0.18); border: none; border-radius: 50%; width: 38px; height: 38px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; transition: all 0.2s; z-index: 101;" title="تبديل الوضع الداكن">🌙</button>
+</div>
+
+<!-- ══════════════════════════════
+     HOME SCREEN
+══════════════════════════════ -->
+<div id="homeScreen" class="screen active">
+  <div class="home-wrap">
+    <div class="home-hero">
+      <div class="big-emoji">🧬</div>
+      <h2>Biological Sequence Analysis — BIO412</h2>
+      <p><bdi><strong>37 MCQ</strong></bdi> على المنهج + <bdi><strong>13</strong></bdi> سؤال مقالي بالـ <bdi>AI</bdi> متوقع إنها تيجي في الامتحان. اختار الموضوع وطريقة الترتيب وابدأ!</p>
+
+      <div class="stats-row">
+        <div class="stat-pill"><div class="sn">37</div><div class="sl">MCQs</div></div>
+        <div class="stat-pill"><div class="sn">13</div><div class="sl">مقالي AI</div></div>
+        <div class="stat-pill"><div class="sn">3</div><div class="sl">Topics</div></div>
+        <div class="stat-pill"><div class="sn">🏆</div><div class="sl">Score</div></div>
+      </div>
+
+      <div class="lec-badges-label" style="margin-top:16px">المواضيع اللي البوت بيغطيها:</div>
+      <div class="lec-badges">
+          <span class="lec-badge">🔑 L1 · Algorithms &amp; Hashing (20 Qs)</span>
+          <span class="lec-badge">🧬 L2 · Sequences &amp; Central Dogma (12 Qs)</span>
+          <span class="lec-badge">📚 L3 · Course Info (5 Qs)</span>
+          <span class="lec-badge" style="border-color:#6366f1; color:#6366f1;">📝 بنك الأسئلة المقالية بالـ AI — متوقع في الامتحان</span>
+        </div>
+    </div>
+
+    <!-- Resume Box if any progress saved -->
+    <div id="resumeBox" style="display:none; background:var(--primary-light); border: 2.5px dashed var(--primary); border-radius: 14px; padding: clamp(14px,3vw,18px); margin-bottom: 20px; text-align: center;">
+      <p style="font-weight: 800; color: var(--primary-dark); font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px;">💾 لديك اختبار غير مكتمل!</p>
+      <p style="font-size: 0.82rem; color: var(--muted); margin: 6px 0 14px;" id="resumeDetails">السؤال 12 من 47</p>
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button class="resume-btn" style="flex: 1;" onclick="resumeQuiz()">🚀 استكمال الاختبار</button>
+        <button class="nav-btn btn-skip" style="flex: 1; padding: 10px; font-size: 0.82rem; background: #fee2e2; color: #ef4444; border-color: #fca5a5;" onclick="clearSavedProgress()">🗑️ بدء جديد</button>
+      </div>
+    </div>
+
+    <!-- ⚙️ ORGANIZED HOME SETUP PANELS ══ -->
+    <div class="q-card" style="margin-bottom: 20px; padding: clamp(14px, 3.5vw, 20px); border: 2.5px solid rgba(99,102,241,0.06); transition: all 0.2s;">
+      <div style="font-size: 1.05rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 12px; border-bottom: 2px solid var(--border); padding-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+        ⚙️ إعداد ورقة الاختبار (Quiz Setup)
+      </div>
+      
+      <!-- Select Lecture Section -->
+      <div class="mode-section" style="margin-bottom: 16px;">
+        <div class="mode-label" style="font-weight: 800; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px;">اختر الموضوع المستهدف / Select Topic</div>
+        <select id="lectureSelect" style="width: 100%; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--border); background: var(--card); color: var(--text); font-weight: 700; font-size: 0.88rem; outline: none; cursor: pointer; transition: all 0.2s; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);">
+          <option value="all">📁 كل المواضيع (37 سؤال)</option>
+          <option value="L1">🔑 Algorithms &amp; Hashing — Rabin-Karp + Naïve (20 سؤال)</option>
+          <option value="L2">🧬 Sequences &amp; Central Dogma (12 سؤال)</option>
+          <option value="L3">📚 Course Info — كود المادة والحضور (5 سؤال)</option>
+        </select>
+      </div>
+
+      <!-- Choose Mode Section -->
+      <div class="mode-section">
+        <div class="mode-label" style="font-weight: 800; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px;">اختر طريقة الترتيب / Choose Order Mode</div>
+        <div class="mode-toggle">
+          <div class="mode-card sel" id="modeInOrder" onclick="pickMode('inorder')" style="padding: 10px 8px; gap: 4px;">
+            <span class="mc-icon" style="font-size: 1.4rem;">📋</span>
+            <span style="font-weight: 800;">In Order</span>
+            <span class="mc-desc" style="font-size: 0.65rem;">الأسئلة بالترتيب الأصلي</span>
+          </div>
+          <div class="mode-card" id="modeRandom" onclick="pickMode('random')" style="padding: 10px 8px; gap: 4px;">
+            <span class="mc-icon" style="font-size: 1.4rem;">🔀</span>
+            <span style="font-weight: 800;">Random</span>
+            <span class="mc-desc" style="font-size: 0.65rem;">ترتيب وخيارات عشوائية</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Start Quiz Button placed inside the Setup Card -->
+      <button class="start-btn" onclick="startQuiz()" style="margin-top: 18px; width: 100%;">
+         بدء الاختبار
+      </button>
+    </div>
+
+    <!-- Special Study Modes -->
+    <div class="q-card" style="margin-bottom: 20px; padding: clamp(14px, 3.5vw, 20px); border: 2.5px solid rgba(99,102,241,0.06); transition: all 0.2s;">
+      <div style="font-size: 1.05rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 12px; border-bottom: 2px solid var(--border); padding-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+        💡 أوضاع تدريب خاصة (Special Training Modes)
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+        <div class="mode-card" id="modeWrongOnly" onclick="startSpecialMode('wrong')" style="border-color: rgba(239, 68, 68, 0.25); background: rgba(239, 68, 68, 0.01); padding: 12px 6px; gap: 4px; border-radius: 12px;">
+          <span class="mc-icon" style="color: #ef4444; font-size: 1.4rem;">🔁</span>
+          <span style="font-weight: 800; color: var(--text);">الأخطاء السابقة</span>
+          <span class="mc-desc" id="wrongCountLabel" style="color: var(--muted); font-size: 0.65rem;">أخطائك السابقة (0 أسئلة)</span>
+        </div>
+        <div class="mode-card" id="modeFlaggedOnly" onclick="startSpecialMode('flagged')" style="border-color: rgba(245, 158, 11, 0.25); background: rgba(245, 158, 11, 0.01); padding: 12px 6px; gap: 4px; border-radius: 12px;">
+          <span class="mc-icon" style="color: #f59e0b; font-size: 1.4rem;">⭐</span>
+          <span style="font-weight: 800; color: var(--text);">الأسئلة المميزة</span>
+          <span class="mc-desc" id="flaggedCountLabel" style="color: var(--muted); font-size: 0.65rem;">الأسئلة المميزة (0 أسئلة)</span>
+        </div>
+      </div>
+      
+      <!-- Anti-cheat Not Longest Option Card -->
+      <div class="mode-card" id="modeNotLongest" onclick="startSpecialMode('not_longest')" style="border-color: rgba(99, 102, 241, 0.25); background: rgba(99, 102, 241, 0.01); margin-bottom: 12px; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 12px; padding: 12px 14px; width: 100%; border-radius: 12px; text-align: left; cursor: pointer;">
+        <span class="mc-icon" style="color: #6366f1; font-size: 1.5rem;">🚫</span>
+        <div style="display: flex; flex-direction: column;">
+          <span style="font-weight: 800; color: var(--text); font-size: 0.85rem;">🚫 أسئلة خارج البصمجة (إجابة ليست الأطول)</span>
+          <span class="mc-desc" style="color: var(--muted); margin-top: 1px; text-align: left; font-size: 0.68rem;">تصفية <span id="notLongestCount" style="font-weight:900; color:#6366f1;">...</span> سؤالاً إجابتها الصحيحة ليست الخيار الأطول لمنع التخمين العشوائي!</span>
+        </div>
+      </div>
+
+      <!-- بنك الشرح + ألعاب الاسترجاع -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+        <div class="mode-card" id="modeEssayBank" onclick="goToEssayBank()" style="border-color: rgba(99, 102, 241, 0.25); background: rgba(99, 102, 241, 0.01); padding: 12px 6px; gap: 4px; border-radius: 12px;">
+          <span class="mc-icon" style="color: #6366f1; font-size: 1.4rem;">📝</span>
+          <span style="font-weight: 800; color: var(--text);">بنك الأسئلة المقالية</span>
+          <span class="mc-desc" id="essayBankCountLabel" style="color: var(--muted); font-size: 0.65rem;">أسئلة AI متوقع إنها تيجي في الامتحان</span>
+        </div>
+        <div class="mode-card" id="modeRetention" onclick="goToRetention()" style="border-color: rgba(124, 58, 237, 0.25); background: rgba(124, 58, 237, 0.01); padding: 12px 6px; gap: 4px; border-radius: 12px;">
+          <span class="mc-icon" style="color: #7c3aed; font-size: 1.4rem;">🧠</span>
+          <span style="font-weight: 800; color: var(--text);">رتّب + وصّل</span>
+          <span class="mc-desc" id="retentionCountLabel" style="color: var(--muted); font-size: 0.65rem;">ألعاب استرجاع</span>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="goToQBank()" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 14px rgba(5,150,105,0.22); margin-top: 6px; width: 100%;">
+        📚 بنك الأسئلة السريع (37 سؤال)
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     QUIZ SCREEN (ورقة الامتحان المفتوحة)
+══════════════════════════════ -->
+<div id="quizScreen" class="screen">
+  <div class="quiz-wrap" style="max-width: 680px; padding-bottom: 90px;">
+    <div class="set-banner" id="quizBanner" style="background: linear-gradient(135deg,#4338ca,#818cf8);">🖥️ ورقة الاختبار المفتوحة</div>
+    
+    <!-- This container will hold all the rendered question cards -->
+    <div id="quizQuestionsContainer"></div>
+    
+    <!-- Submit Button at the bottom of the list -->
+    <button class="show-result-btn" onclick="submitQuiz()" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 14px rgba(5,150,105,0.3); margin-top: 20px; font-weight: 800; font-size: 1.05rem; width: 100%;">
+      📊 إنهاء الاختبار وعرض النتيجة النهائية
+    </button>
+  </div>
+  
+  <!-- Floating Bottom Progress Bar -->
+  <div style="position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 2px solid var(--border); padding: 12px 20px; z-index: 100; box-shadow: 0 -4px 15px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: space-between; max-width: 680px; margin: 0 auto; border-radius: 16px 16px 0 0;">
+    <div style="display: flex; flex-direction: column; gap: 4px; text-align: left;">
+      <span style="font-size: 0.82rem; font-weight: bold; color: var(--text);" id="quizFloatingProgress">تم حل 0 من أصل 0 سؤال</span>
+      <div class="progress-bar-wrap" style="width: 140px; height: 6px; margin-top: 0; background: rgba(0,0,0,0.1);"><div class="progress-bar-fill" id="quizFloatingBar" style="width:0%; background: var(--primary);"></div></div>
+    </div>
+    <button onclick="submitQuiz()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 10px; padding: 10px 18px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: transform 0.1s;">إنهاء وتسليم 📄</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     RESULT SCREEN
+══════════════════════════════ -->
+<div id="resultScreen" class="screen">
+  <div class="res-wrap">
+    <div class="res-card">
+      <div class="res-emoji" id="resEmoji">🏆</div>
+      <div class="res-title" id="resTitle">Quiz Complete!</div>
+      <div class="res-sub"   id="resSub">Well done!</div>
+      <div class="score-ring" id="scoreRing">
+        <span class="pct"  id="resPct">0%</span>
+        <span class="slbl">Score</span>
+      </div>
+      <div class="res-grid">
+        <div class="res-stat"><div class="rn" id="rC" style="color:#22c55e">0</div><div class="rl">✅ Correct</div></div>
+        <div class="res-stat"><div class="rn" id="rW" style="color:#ef4444">0</div><div class="rl">❌ Wrong</div></div>
+        <div class="res-stat"><div class="rn" id="rS" style="color:#f59e0b">0</div><div class="rl">⏭ Skipped</div></div>
+      </div>
+      <div class="res-acts">
+        <button class="btn-retry" id="btnRetryWrong" onclick="retryWrongOnly()" style="background: linear-gradient(135deg, #ef4444, #f43f5e); box-shadow: 0 4px 14px rgba(239,68,68,0.25); margin-bottom: 5px; display: none;">🔁 اختبار الأخطاء فقط</button>
+        <button class="btn-retry"   onclick="retryQuiz()">🔄 Try Again</button>
+        <button class="btn-review2" onclick="goReview()">📝 Review Answers</button>
+        <button class="btn-home2"   onclick="goHome()">🏠 Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     REVIEW SCREEN
+══════════════════════════════ -->
+<div id="reviewScreen" class="screen">
+  <div class="rev-wrap">
+    <div class="rev-hdr">
+      <h2>📝 Answer Review</h2>
+      <p>All 37 questions with correct answers highlighted</p>
+    </div>
+    <div id="revList"></div>
+    <button class="back-btn2" onclick="goResult()">← Back to Results</button>
+  </div>
+</div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     FILL-IN-THE-BLANK / MEMORIZATION SCREEN
+══════════════════════════════ -->
+<!-- ══════════════════════════════
+     QUESTION BANK SCREEN (بنك الأسئلة)
+══════════════════════════════ -->
+<div id="qbankScreen" class="screen">
+  <div class="rev-wrap" style="max-width: 720px;">
+    <div class="set-banner" style="background: linear-gradient(135deg,#10b981,#059669); margin-bottom: 15px; font-size: 1.05rem; font-weight: 800; justify-content: center; display: flex; align-items: center; gap: 8px;">
+      📚 بنك الأسئلة والمراجعة السريعة (بدون اختبار)
+    </div>
+    <button class="essay-btn" onclick="goToEssayBank()" id="qbankToEssayBtn" style="width:100%; justify-content:center; margin-bottom:12px;">📝 الانتقال لبنك الأسئلة المقالية والإجابات</button>
+    
+    <!-- Search and Filters Card -->
+    <div class="q-card" style="margin-bottom: 15px; padding: clamp(12px, 3.5vw, 18px);">
+      
+      <!-- Instant Search Bar -->
+      <div style="margin-bottom: 14px; position: relative;">
+        <input type="text" id="qbankSearchInput" oninput="searchQBank()" placeholder="🔍 ابحث بالكلمات في الأسئلة والإجابات (مثال: genome, NGS, synteny)..." style="width: 100%; padding: 12px 15px; border-radius: 12px; border: 2px solid var(--border); background: var(--card); color: var(--text); font-weight: bold; font-size: 0.88rem; outline: none; transition: border-color 0.2s;">
+      </div>
+
+      <div style="font-size: 0.88rem; font-weight: 800; margin-bottom: 10px; color: var(--text);">اختر الفلتر لعرض الأسئلة وإجاباتها:</div>
+      
+      <!-- Quick Filters Grid -->
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;" id="qbankFilters">
+        <button class="lec-badge" style="cursor: pointer; padding: 6px 12px;" onclick="setQBankFilter('all')" id="qbf_all">الكل (37)</button>
+        <button class="lec-badge" style="cursor: pointer; padding: 6px 12px; border-color: #6366f1; color: #6366f1; font-weight: bold;" onclick="setQBankFilter('not_longest')" id="qbf_not_longest">🚫 إجابة ليست الأطول</button>
+        <button class="lec-badge" style="cursor: pointer; padding: 6px 12px; border-color: #f59e0b; color: #f59e0b;" onclick="setQBankFilter('flagged')" id="qbf_flagged">المميزة بنجمة (0)</button>
+        <button class="lec-badge" style="cursor: pointer; padding: 6px 12px; border-color: #ef4444; color: #ef4444;" onclick="setQBankFilter('wrong')" id="qbf_wrong">الأخطاء السابقة (0)</button>
+      </div>
+      
+      <!-- Lecture Filter Row -->
+      <div style="font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; color: var(--muted);">المواضيع:</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+        <button class="lec-badge" style="cursor: pointer;" onclick="setQBankFilter('L1')" id="qbf_L1">L1 · Algorithms</button>
+        <button class="lec-badge" style="cursor: pointer;" onclick="setQBankFilter('L2')" id="qbf_L2">L2 · Sequences</button>
+        <button class="lec-badge" style="cursor: pointer;" onclick="setQBankFilter('L3')" id="qbf_L3">L3 · Course Info</button>
+      </div>
+    </div>
+
+    <!-- Questions Container -->
+    <div id="qbankList"></div>
+
+    <button class="back-btn2" onclick="goHome()" style="background: var(--bg); color: var(--muted); border: 2px solid var(--border) !important; margin-top: 15px; width: 100%;">🏠 العودة للرئيسية</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     ESSAY QUESTION BANK SCREEN (بنك الأسئلة المقالية)
+══════════════════════════════ -->
+<div id="essayScreen" class="screen">
+  <div class="rev-wrap" style="max-width: 760px;">
+    <div class="set-banner" style="background: linear-gradient(135deg,#4338ca,#6366f1); margin-bottom: 15px; font-size: 1.02rem; font-weight: 800; justify-content: center; display: flex; align-items: center; gap: 8px; text-align:center;">
+      🤖 بنك الأسئلة المقالية (AI)<span style="display:block; font-size:0.7rem; font-weight:600; opacity:.9; margin-top:4px;">أسئلة معمولة بالـ AI — متوقع إنها تيجي في الامتحان</span>
+    </div>
+
+    <!-- Progress -->
+    <div class="essay-progress-wrap">
+      <div class="essay-progress-top">
+        <span id="essayProgressLabel">تمت مذاكرة 0 من 0 سؤال</span>
+        <span id="essayProgressPct" style="color:#10b981;">0%</span>
+      </div>
+      <div class="essay-progress-bar"><div class="essay-progress-fill" id="essayProgressFill"></div></div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="q-card" style="margin-bottom: 14px; padding: clamp(12px, 3.5vw, 18px);">
+      <input type="text" id="essaySearchInput" oninput="renderEssayBank()" placeholder="🔍 ابحث في الأسئلة والشرح (مثال: hash, Rabin, Naïve, k-mer)..." style="width: 100%; padding: 12px 15px; border-radius: 12px; border: 2px solid var(--border); background: var(--card); color: var(--text); font-weight: bold; font-size: 0.86rem; outline: none; margin-bottom: 12px;">
+
+      <div style="font-size: 0.82rem; font-weight: 800; margin-bottom: 8px; color: var(--muted);">فلترة:</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px;">
+        <button class="lec-badge" style="cursor:pointer;" onclick="setEssayFilter('all')" id="ef_all">📁 الكل</button>
+        <button class="lec-badge" style="cursor:pointer; border-color:#f59e0b; color:#f59e0b;" onclick="setEssayFilter('star')" id="ef_star">★ المحفوظة (0)</button>
+      </div>
+
+      <div class="essay-toolbar">
+        <button class="essay-btn" onclick="revealAllEssays(true)">👁️ اعرض كل الإجابات</button>
+        <button class="essay-btn ghost" onclick="revealAllEssays(false)">🙈 اخفِ كل الإجابات</button>
+        <button class="essay-btn ghost" onclick="resetEssayProgress()">🔄 تصفير المذاكرة</button>
+      </div>
+    </div>
+
+    <button class="essay-btn" onclick="goToRetention()" style="width:100%; justify-content:center; margin-bottom:12px; border-color:#7c3aed; color:#7c3aed; background:rgba(124,58,237,0.07);">🧠 جرّب نفس المحتوى في اختبار الاسترجاع (رتّب + وصّل)</button>
+
+    <!-- Cards -->
+    <div id="essayList"></div>
+
+    <button class="back-btn2" onclick="goHome()" style="background: var(--bg); color: var(--muted); border: 2px solid var(--border) !important; margin-top: 15px; width: 100%;">🏠 العودة للرئيسية</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     RETENTION GAMES SCREEN (اختبارات الاسترجاع)
+══════════════════════════════ -->
+<div id="retentionScreen" class="screen">
+  <div class="rev-wrap" style="max-width: 760px;">
+    <div class="set-banner" style="background: linear-gradient(135deg,#7c3aed,#a855f7); margin-bottom: 15px; font-size: 1.02rem; font-weight: 800; justify-content: center; display: flex; align-items: center; gap: 8px; text-align: center;">
+      🧠 اختبارات الاسترجاع — رتّب الخطوات ووصّل المصطلحات
+    </div>
+
+    <div class="rt-tabs">
+      <button class="rt-tab active" id="rtTab_order" onclick="switchRetentionTab('order')">🔢 رتّب الخطوات</button>
+      <button class="rt-tab" id="rtTab_match" onclick="switchRetentionTab('match')">🔗 وصّل المصطلح</button>
+    </div>
+
+    <!-- ── ORDERING PANE ── -->
+    <div id="rtPaneOrder">
+      <div class="q-card" style="margin-bottom: 14px; padding: clamp(12px,3.5vw,18px);">
+        <div class="rt-section-label" style="margin-top:0;">اختر العملية اللي عايز ترتّبها:</div>
+        <div class="rt-chips" id="rtOrderChips"></div>
+      </div>
+      <div id="rtOrderArea"></div>
+    </div>
+
+    <!-- ── MATCHING PANE ── -->
+    <div id="rtPaneMatch" style="display:none;">
+      <div class="q-card" style="margin-bottom: 14px; padding: clamp(12px,3.5vw,18px);">
+        <div class="rt-section-label" style="margin-top:0;">فلتر الموضوع:</div>
+        <div class="rt-chips" id="rtMatchChips"></div>
+      </div>
+      <div id="rtMatchArea"></div>
+    </div>
+
+    <button class="back-btn2" onclick="goHome()" style="background: var(--bg); color: var(--muted); border: 2px solid var(--border) !important; margin-top: 15px; width: 100%;">🏠 العودة للرئيسية</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  QUESTION BANK — 37 MCQs from 3 topics
+// ══════════════════════════════════════════════════════
+const QUESTIONS = [
+  {
+    "lec": "Lecture 1",
+    "q": "What is a collision in Rabin-Karp?",
+    "opts": ["When two identical strings have different hash values", "When two different strings have the same hash value", "When the text is shorter than the pattern", "When no substring is generated"],
+    "ans": 1
+  },
+  {
+    "lec": "Lecture 3",
+    "q": "According to the university regulations stated in the course requirements, what penalty is applied if a student misses 25% of meetings without a strong excuse?",
+    "opts": ["They must pay a re-enrollment fee", "Their final grade is reduced by 50%", "They receive a grade of 'W'", "They fail the final exam automatically"],
+    "ans": 2
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "Which of the following parameters helps make hash collisions less likely when using modular arithmetic?",
+    "opts": ["Eliminating modulo operation entirely", "Choosing a sufficiently large prime number q (e.g., 101, 13, 11)", "Setting the base d equal to zero", "Making pattern length shorter than alphabet size"],
+    "ans": 1
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "The exact pattern matching problem is:",
+    "opts": ["Finding all positions where pattern P occurs exactly in text T", "Counting vowels in a string", "Finding all approximate matches of P in T", "Comparing two strings to see if they are equal"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "Given string S = \"ACCTC\" and string T = \"GAT\", what is the concatenation result ST?",
+    "opts": ["GATACCTC", "ACCTCGAT", "AGCTCTAT", "ACCTC GAT"],
+    "ans": 1
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "Using base k = 4 and digit mapping (A=0, C=1, G=2, T=3), what is the numeric value (hash) of the DNA string 'TCCG'?",
+    "opts": ["142", "61", "214", "245"],
+    "ans": 2
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "What action must be taken immediately when a hash match occurs between a pattern and a text substring?",
+    "opts": ["Double the base d", "Increment the prime number q", "Terminate the algorithm immediately", "Verify by direct character-by-character comparison"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "Given h(TTCC) = 245 and h(CCGT) = 91 with modulus q = 11, what event is demonstrated by both yielding a remainder of 3?",
+    "opts": ["An exact pattern match", "An alphabet overflow", "A rolling hash failure", "A hash collision"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "In the naive string matching algorithm, how is the pattern P slid over the text T?",
+    "opts": ["By skipping non-matching characters in increments of m", "One by one", "Randomly across the sequence", "From right to left"],
+    "ans": 1
+  },
+  {
+    "lec": "Lecture 3",
+    "q": "What is the prerequisite course required for Biological Sequence Analysis?",
+    "opts": ["Cell and Molecular Biology (BIO315)", "Computer Programming", "Advanced Algorithms", "Organic Chemistry"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "What are k-mers?",
+    "opts": ["Subsequence of length k", "Prefixes of length k", "Suffixes of length k", "Substrings of length k"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 3",
+    "q": "What is the weight distribution of the Final Exam in the evaluation criteria?",
+    "opts": ["15%", "20%", "10%", "40%"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "In the Naïve algorithm, at each alignment, the comparison is:",
+    "opts": ["Alternating left and right", "Random order", "From right to left", "From left to right"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "For DNA alphabet Σ={A,C,G,T}, what is the value assigned to A?",
+    "opts": ["0", "1", "3", "2"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "What process uses mRNA as a template to synthesize proteins?",
+    "opts": ["Translation", "Transcription", "Splicing", "Replication"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 3",
+    "q": "What is the course code for Biological Sequence Analysis?",
+    "opts": ["GEN201", "BIO500", "BIO412", "BIO315"],
+    "ans": 2
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "What is a key limitation of the Rabin-Karp algorithm?",
+    "opts": ["Hash collisions require a verification step, which can impact efficiency if frequent", "It fails if pattern length is greater than 2 characters", "It cannot be used with DNA alphabets", "It requires exponential time complexity in all cases"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "The Naïve pattern matching algorithm works by:",
+    "opts": ["Comparing characters in blocks", "Preprocessing the pattern for optimization", "Sliding the pattern over the text one position at a time", "Using hashing to compare P and T"],
+    "ans": 2
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "What distinguishes a subsequence from a substring?",
+    "opts": ["Subsequences must be longer than substrings", "Subsequences can only be formed from protein sequences", "Subsequences cannot contain repeating letters", "Subsequences consist of characters that do not need to be consecutive"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "According to the Central Dogma, in what direction does genetic information flow?",
+    "opts": ["DNA to protein directly without intermediaries", "Protein to RNA to DNA", "DNA to RNA to protein", "RNA to DNA to protein"],
+    "ans": 2
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "What process converts DNA into messenger RNA (mRNA)?",
+    "opts": ["Translation", "Reverse transcription", "Replication", "Transcription"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "What is the primary purpose of the Rabin-Karp algorithm in biological sequence analysis?",
+    "opts": ["Exact string matching using hashing", "Assembling fragmented DNA reads de novo", "Predicting secondary protein structures", "Finding global sequence alignments using dynamic programming"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "In the context of Rabin-Karp algorithm parameters, what does letter d represent in the hash function formula?",
+    "opts": ["Depth of recursion tree", "Distance between mismatches", "Derivative of text length", "Base size of the alphabet"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "If |T| = 12 and l = 6, how many l-substrings are generated?",
+    "opts": ["7", "6", "5", "12"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "The Naïve algorithm checks how many possible alignments?",
+    "opts": ["m", "n − m + 1", "n", "m − n + 1"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "What does the Central Dogma of Life describe?",
+    "opts": ["The replication rate of bacterial plasmids", "The structural folding of proteins into 3D shapes", "The metabolic breakdown of carbohydrates", "The flow of genetic information within a biological system"],
+    "ans": 3
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "Given text string with length n and a pattern with length m, the task is to prints all occurrences of pattern in text. Input: text = “AABAACAADAABAABA”, pattern = “AABA”",
+    "opts": ["Output: Pattern found at index 1, Pattern found at index 10 Pattern found at index 13", "Output: Pattern found at index 0, Pattern found at index 9, Pattern found at index 12", "Output: Pattern found at index 0, Pattern found at index 3, Pattern found at index 9, Pattern found at index 12"],
+    "ans": 1
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "If S is a prefix of T, what condition must be met?",
+    "opts": ["S appears at the very end of T", "There exists a string u such that T = uS", "There exists a string u such that T = Su", "S and T have identical lengths"],
+    "ans": 2
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "In Python slicing, if T = \"ACTATAGCTATA\", what does the slice T[2:6] return?",
+    "opts": ["\"ACTA\"", "\"ATAG\"", "\"TATA\"", "\"CTAT\""],
+    "ans": 2
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "What is the primary advantage of using a rolling hash in the Rabin-Karp algorithm?",
+    "opts": ["It allows subsequence hashes to be recalculated efficiently in O(1) time", "It completely eliminates the need for an alphabet mapping", "It sorts DNA sequences alphabetically", "It compresses sequence size by half"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "What is the basic idea behind Rabin-Karp algorithm?",
+    "opts": ["Represent the pattern and text substrings as hash values", "Compare strings character by character only", "Use Eulerian paths", "Build an LPS array"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 2",
+    "q": "Why are challenges such as large sequence sizes prominent in biological sequence matching?",
+    "opts": ["Patterns never appear more than once in genomes", "DNA sequences consist of only two characters", "Fast algorithms are required to search massive genomic data efficiently", "Computers cannot store text files larger than 1 KB"],
+    "ans": 2
+  },
+  {
+    "lec": "Lecture 3",
+    "q": "Who is the author of the course textbook Bioinformatics and Functional Genomics (3rd Edition, 2015)?",
+    "opts": ["Ben Langmead", "Jonathan Pevsner", "Samia M. Abd-Alhalem", "James Watson"],
+    "ans": 1
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "What problem occurs when two different strings produce the same hash value?",
+    "opts": ["Infinite loop", "Hash collision", "Alphabet mismatch", "Stack overflow"],
+    "ans": 1
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "In Rabin-Karp, what happens if the hash value of the pattern matches the hash value of a text substring?",
+    "opts": ["Characters are compared to confirm the match", "The substring is ignored", "The algorithm stops without checking", "The hash function is deleted"],
+    "ans": 0
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "Worst-case time complexity of the Naïve pattern matching algorithm?",
+    "opts": ["O(n + m)", "O(n log m)", "O(nm)", "O(n/m)"],
+    "ans": 2
+  },
+  {
+    "lec": "Lecture 1",
+    "q": "If h(TCCG) = 214 and the modulus is q = 11, what is the resulting hashed value after applying modulo?",
+    "opts": ["9", "6", "3", "5"],
+    "ans": 3
+  }
+];
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let quizMode      = 'inorder';
+let quizQuestions = [];
+let currentIdx    = 0; // Keeping for compatibility, unused in sheet
+let score = 0, wrongCount = 0, skipped = 0;
+let userAnswers   = [];
+let answered      = false;
+
+// New States
+let flaggedQuestions = []; // Array of original indices
+let allTimeWrong      = new Set(); // Set of original indices
+
+// ══════════════════════════════════════════════════════
+//  HELPERS & INITIALIZATION
+// ══════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+  
+  // If leaving the quiz/qbank screen, reset standard header
+  if (id !== 'qbankScreen' && id !== 'quizScreen') {
+    setHeaderDefault();
+  } else if (id === 'qbankScreen') {
+    setHeaderDefault();
+  }
+
+  // Explicitly update homeBtn visibility
+  const homeBtn = document.getElementById('homeBtn');
+  if (homeBtn) {
+    homeBtn.style.display = (id === 'homeScreen') ? 'none' : 'flex';
+  }
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function pickMode(m) {
+  quizMode = m;
+  document.getElementById('modeInOrder').classList.toggle('sel', m === 'inorder');
+  document.getElementById('modeRandom').classList.toggle('sel',  m === 'random');
+}
+
+// ══════════════════════════════════════════════════════
+//  LOCAL STORAGE & RESUME GAME
+// ══════════════════════════════════════════════════════
+function initLocalStorage() {
+  // Load Flagged Questions
+  const savedFlagged = localStorage.getItem('bio412_flagged_questions');
+  if (savedFlagged) {
+    try { flaggedQuestions = JSON.parse(savedFlagged); } catch (e) { flaggedQuestions = []; }
+  }
+
+  // Load All-Time Wrong Questions
+  const savedWrong = localStorage.getItem('bio412_wrong_questions');
+  if (savedWrong) {
+    try { allTimeWrong = new Set(JSON.parse(savedWrong)); } catch (e) { allTimeWrong = new Set(); }
+  }
+
+  // Load Dark Mode Preference
+  const darkMode = localStorage.getItem('bio412_dark_mode');
+  if (darkMode === 'true') {
+    document.body.classList.add('dark-mode');
+    const toggleBtn = document.getElementById('themeToggleBtn');
+    if (toggleBtn) toggleBtn.textContent = '☀️';
+  }
+
+  // Check Quiz Progress
+  checkQuizProgress();
+  updateHomeLabels();
+}
+
+function updateHomeLabels() {
+  const wrongLabel = document.getElementById('wrongCountLabel');
+  const flaggedLabel = document.getElementById('flaggedCountLabel');
+
+  if (wrongLabel) {
+    wrongLabel.textContent = `أخطائك السابقة (${allTimeWrong.size} أسئلة)`;
+  }
+  if (flaggedLabel) {
+    flaggedLabel.textContent = `الأسئلة المميزة (${flaggedQuestions.length} أسئلة)`;
+  }
+
+  // Update high score in stats row
+  const highScore = localStorage.getItem('bio412_high_score');
+  const scorePill = document.querySelectorAll('.stat-pill')[2];
+  if (scorePill && highScore) {
+    scorePill.querySelector('.sn').textContent = highScore + '%';
+    scorePill.querySelector('.sl').textContent = 'High Score';
+  }
+}
+
+function saveFlaggedToLocalStorage() {
+  localStorage.setItem('bio412_flagged_questions', JSON.stringify(flaggedQuestions));
+  updateHomeLabels();
+}
+
+function saveWrongToLocalStorage() {
+  localStorage.setItem('bio412_wrong_questions', JSON.stringify(Array.from(allTimeWrong)));
+  updateHomeLabels();
+}
+
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('bio412_dark_mode', isDark ? 'true' : 'false');
+  document.getElementById('themeToggleBtn').textContent = isDark ? '☀️' : '🌙';
+}
+
+function saveProgress() {
+  if (quizQuestions.length > 0) {
+    const progress = {
+      quizMode: quizMode,
+      currentIdx: 0,
+      score: score,
+      wrongCount: wrongCount,
+      skipped: skipped,
+      userAnswers: userAnswers,
+      quizQuestions: quizQuestions
+    };
+    localStorage.setItem('bio412_quiz_progress', JSON.stringify(progress));
+  }
+}
+
+function checkQuizProgress() {
+  const saved = localStorage.getItem('bio412_quiz_progress');
+  const resumeBox = document.getElementById('resumeBox');
+  if (saved) {
+    try {
+      const progress = JSON.parse(saved);
+      if (progress && progress.quizQuestions && progress.quizQuestions.length > 0) {
+        document.getElementById('resumeDetails').textContent = `وصلت لـ ${progress.userAnswers.filter(a => a !== null).length} سؤال محلول من أصل ${progress.quizQuestions.length}`;
+        resumeBox.style.display = 'block';
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  if (resumeBox) resumeBox.style.display = 'none';
+}
+
+function resumeQuiz() {
+  const saved = localStorage.getItem('bio412_quiz_progress');
+  if (!saved) return;
+  try {
+    const progress = JSON.parse(saved);
+    quizMode = progress.quizMode;
+    quizQuestions = progress.quizQuestions;
+    currentIdx = 0;
+    score = progress.score;
+    wrongCount = progress.wrongCount;
+    skipped = progress.skipped;
+    userAnswers = progress.userAnswers;
+
+    setHeaderQuiz(quizQuestions.length);
+    showScreen('quizScreen');
+    renderQuizSheet();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function clearSavedProgress() {
+  if (confirm('هل أنت متأكد من رغبتك في حذف التقدم السابق وبدء اختبار جديد؟')) {
+    localStorage.removeItem('bio412_quiz_progress');
+    checkQuizProgress();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  HEADER
+// ══════════════════════════════════════════════════════
+function setHeaderDefault() {
+  const mainHeader = document.getElementById('mainHeader');
+  const isHomeActive = document.getElementById('homeScreen') ? document.getElementById('homeScreen').classList.contains('active') : true;
+  const homeDisplay = isHomeActive ? 'none' : 'flex';
+
+  mainHeader.innerHTML = `
+    <h1>🧬 BIO412 Quiz</h1>
+    <p>Biological Sequence Analysis • <bdi>37 MCQ</bdi> + <bdi>13</bdi> مقالي <bdi>AI</bdi></p>
+    <button id="homeBtn" onclick="goHome()" style="display: ${homeDisplay}; position: absolute; top: clamp(12px, 3.5vw, 18px); left: clamp(12px, 3.5vw, 18px); background: rgba(255,255,255,0.18); border: none; border-radius: 50%; width: 38px; height: 38px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; transition: all 0.2s; z-index: 101;" title="العودة للرئيسية">🏠</button>
+    <button id="themeToggleBtn" onclick="toggleDarkMode()" style="position: absolute; top: clamp(12px, 3.5vw, 18px); right: clamp(12px, 3.5vw, 18px); background: rgba(255,255,255,0.18); border: none; border-radius: 50%; width: 38px; height: 38px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; transition: all 0.2s; z-index: 101;" title="تبديل الوضع الداكن">${document.body.classList.contains('dark-mode') ? '☀️' : '🌙'}</button>
+  `;
+}
+
+function setHeaderQuiz(total) {
+  const mainHeader = document.getElementById('mainHeader');
+  mainHeader.innerHTML = `
+    <h1>🧬 BIO412 Quiz</h1>
+    <p>Biological Sequence Analysis • <bdi>37 MCQ</bdi> + <bdi>13</bdi> مقالي <bdi>AI</bdi></p>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pbFill" style="width:0%"></div></div>
+    <div class="progress-text" id="pbText">Question 1 of ${total}</div>
+    <button id="homeBtn" onclick="goHome()" style="display: flex; position: absolute; top: clamp(12px, 3.5vw, 18px); left: clamp(12px, 3.5vw, 18px); background: rgba(255,255,255,0.18); border: none; border-radius: 50%; width: 38px; height: 38px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; transition: all 0.2s; z-index: 101;" title="العودة للرئيسية">🏠</button>
+    <button id="themeToggleBtn" onclick="toggleDarkMode()" style="position: absolute; top: clamp(12px, 3.5vw, 18px); right: clamp(12px, 3.5vw, 18px); background: rgba(255,255,255,0.18); border: none; border-radius: 50%; width: 38px; height: 38px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; transition: all 0.2s; z-index: 101;" title="تبديل الوضع الداكن">${document.body.classList.contains('dark-mode') ? '☀️' : '🌙'}</button>
+  `;
+}
+
+function updateProgress() {
+  const pct = Math.round((userAnswers.filter(a => a !== null).length / quizQuestions.length) * 100);
+  const f = document.getElementById('pbFill');
+  const t = document.getElementById('pbText');
+  if (f) f.style.width = pct + '%';
+  if (t) t.textContent = `حليت ${userAnswers.filter(a => a !== null).length} سؤال من أصل ${quizQuestions.length}`;
+}
+
+// ══════════════════════════════════════════════════════
+//  START QUIZ
+// ══════════════════════════════════════════════════════
+function startQuiz() {
+  const lecVal = document.getElementById('lectureSelect').value;
+
+  // 1. Filter original questions based on lecture selection
+  let baseQuestions = [];
+  if (lecVal === 'all') {
+    baseQuestions = QUESTIONS;
+  } else {
+    const lecMap = {
+      'L1': 'Lecture 1',
+      'L2': 'Lecture 2',
+      'L3': 'Lecture 3'
+    };
+    const targetLecName = lecMap[lecVal];
+    baseQuestions = QUESTIONS.filter(q => q.lec === targetLecName);
+  }
+
+  // 2. Map questions with original indexes to retain flagged/wrong status mappings correctly!
+  quizQuestions = baseQuestions.map(q => {
+    const originalIdx = QUESTIONS.indexOf(q);
+    return {
+      originalIdx: originalIdx,
+      lec:  q.lec,
+      q:    q.q,
+      opts: [...q.opts],
+      ans:  q.ans,
+      note: q.note
+    };
+  });
+
+  if (quizMode === 'random') {
+    // Shuffle question order
+    shuffle(quizQuestions);
+    // Shuffle options within each question
+    quizQuestions.forEach(q => {
+      const correctText = q.opts[q.ans];
+      shuffle(q.opts);
+      q.ans = q.opts.indexOf(correctText);
+    });
+  }
+
+  currentIdx = 0; score = 0; wrongCount = 0; skipped = 0;
+  userAnswers = new Array(quizQuestions.length).fill(null);
+
+  setHeaderQuiz(quizQuestions.length);
+  showScreen('quizScreen');
+  renderQuizSheet();
+  saveProgress();
+}
+
+// ══════════════════════════════════════════════════════
+//  START SPECIAL MODES (Wrong / Flagged / Not Longest Only)
+// ══════════════════════════════════════════════════════
+function startSpecialMode(type) {
+  let indices = [];
+  if (type === 'wrong') {
+    indices = Array.from(allTimeWrong);
+    if (indices.length === 0) {
+      alert('لا توجد أخطاء مسجلة بعد! العب الاختبار العادي وأخطئ في بعض الأسئلة أولاً.');
+      return;
+    }
+  } else if (type === 'flagged') {
+    indices = flaggedQuestions;
+    if (indices.length === 0) {
+      alert('لا توجد أسئلة مميزة بالنجمة بعد! حدد بعض الأسئلة أثناء الاختبار أولاً.');
+      return;
+    }
+  } else if (type === 'not_longest') {
+    QUESTIONS.forEach((q, idx) => {
+      const lengths = q.opts.map(o => o.length);
+      const maxLen = Math.max(...lengths);
+      const correctLen = q.opts[q.ans].length;
+      if (correctLen < maxLen) {
+        indices.push(idx);
+      }
+    });
+  }
+
+  // Map the indices back to questions
+  quizQuestions = indices.map(idx => {
+    const q = QUESTIONS[idx];
+    return {
+      originalIdx: idx,
+      lec:  q.lec,
+      q:    q.q,
+      opts: [...q.opts],
+      ans:  q.ans,
+      note: q.note
+    };
+  });
+
+  currentIdx = 0; score = 0; wrongCount = 0; skipped = 0;
+  userAnswers = new Array(quizQuestions.length).fill(null);
+
+  setHeaderQuiz(quizQuestions.length);
+  showScreen('quizScreen');
+  renderQuizSheet();
+}
+
+// ══════════════════════════════════════════════════════
+//  RENDER QUIZ SHEET (جميع الأسئلة مفتوحة وقابلة للرجوع والتمرير)
+// ══════════════════════════════════════════════════════
+function renderQuizSheet() {
+  const container = document.getElementById('quizQuestionsContainer');
+  container.innerHTML = '';
+  const LABELS = ['A','B','C','D','E'];
+
+  quizQuestions.forEach((q, qIdx) => {
+    const chosen = userAnswers[qIdx];
+    const isAnswered = chosen !== null;
+    const isCorrect = isAnswered && chosen === q.ans;
+    const isFlagged = flaggedQuestions.includes(q.originalIdx);
+
+    // Generate options HTML
+    let optsHtml = '';
+    q.opts.forEach((opt, oIdx) => {
+      let btnClass = 'opt-btn';
+      let isDisabled = isAnswered ? 'disabled' : '';
+      
+      if (isAnswered) {
+        if (oIdx === q.ans) {
+          btnClass += ' correct';
+        } else if (oIdx === chosen && !isCorrect) {
+          btnClass += ' wrong';
+        }
+      }
+
+      optsHtml += `
+        <button class="${btnClass}" ${isDisabled} onclick="answerQuestionSheet(${qIdx}, ${oIdx}, this)" style="margin-top: 6px; width: 100%;">
+          <span class="ol">${LABELS[oIdx]}</span><span>${opt}</span>
+        </button>
+      `;
+    });
+
+    // Generate feedback box if answered
+    let fbHtml = '';
+    if (isAnswered) {
+      if (isCorrect) {
+        fbHtml = `<div class="fb-box correct show" style="display: flex;">✅ Correct! Well done!</div>`;
+      } else {
+        fbHtml = `<div class="fb-box wrong show" style="display: flex;">❌ Wrong! Correct answer: <strong>${q.opts[q.ans]}</strong></div>`;
+      }
+    } else {
+      fbHtml = `<div class="fb-box" id="fbBox_${qIdx}"></div>`;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = `qCard_${qIdx}`;
+    card.style.marginBottom = '16px';
+    
+    card.innerHTML = `
+      <div class="q-meta" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <span class="q-badge">سؤال ${qIdx + 1} / ${quizQuestions.length}</span>
+          <span class="q-lec-tag">${q.lec}</span>
+        </div>
+        <button id="flagBtn_${qIdx}" onclick="toggleFlagSheet(${qIdx}, this)" style="background: var(--bg); border: 1px solid var(--border); border-radius: 20px; font-size: 0.8rem; cursor: pointer; user-select: none; padding: 4px 10px; display: flex; align-items: center; gap: 4px; color: ${isFlagged ? '#f59e0b' : 'var(--muted)'}; font-weight: 700; border-color: ${isFlagged ? '#f59e0b' : 'var(--border)'}; transition: all 0.2s;">
+          <span>${isFlagged ? '★' : '☆'}</span> <span>${isFlagged ? 'محدد' : 'تحديد'}</span>
+        </button>
+      </div>
+      ${q.note ? `<div class="q-note">${q.note}</div>` : ''}
+      <div class="q-text" style="font-size: clamp(0.9rem, 3vw, 1rem); font-weight: 700; line-height: 1.6; margin-bottom: 15px; color: var(--text); text-align: left;">
+        ${q.q}
+      </div>
+      <div class="opts" id="opts_${qIdx}">
+        ${optsHtml}
+      </div>
+      ${fbHtml}
+    `;
+    container.appendChild(card);
+  });
+
+  updateSheetProgress();
+}
+
+// ══════════════════════════════════════════════════════
+//  ANSWER QUESTION SHEET
+// ══════════════════════════════════════════════════════
+function answerQuestionSheet(qIdx, chosen, btn) {
+  if (userAnswers[qIdx] !== null) return; // Already answered
+  userAnswers[qIdx] = chosen;
+
+  const q = quizQuestions[qIdx];
+  const isCorrect = chosen === q.ans;
+  
+  if (isCorrect) {
+    allTimeWrong.delete(q.originalIdx);
+  } else {
+    allTimeWrong.add(q.originalIdx);
+  }
+  saveWrongToLocalStorage();
+
+  // Highlight choices
+  const optsContainer = document.getElementById(`opts_${qIdx}`);
+  const buttons = optsContainer.querySelectorAll('button');
+  buttons.forEach((b, oIdx) => {
+    b.disabled = true;
+    if (oIdx === q.ans) {
+      b.classList.add('correct');
+    } else if (oIdx === chosen && !isCorrect) {
+      b.classList.add('wrong');
+    }
+  });
+
+  // Display feedback box
+  const fb = document.getElementById(`fbBox_${qIdx}`);
+  if (fb) {
+    if (isCorrect) {
+      fb.className = 'fb-box correct show';
+      fb.style.display = 'flex';
+      fb.innerHTML = '✅ Correct! Well done!';
+    } else {
+      fb.className = 'fb-box wrong show';
+      fb.style.display = 'flex';
+      fb.innerHTML = `❌ Wrong! Correct answer: <strong>${q.opts[q.ans]}</strong>`;
+    }
+  }
+
+  updateSheetProgress();
+  saveProgress();
+}
+
+// ══════════════════════════════════════════════════════
+//  UPDATE FLOATING SHEET PROGRESS
+// ══════════════════════════════════════════════════════
+function updateSheetProgress() {
+  const total = quizQuestions.length;
+  const answeredCount = userAnswers.filter(a => a !== null).length;
+  
+  const label = document.getElementById('quizFloatingProgress');
+  const bar = document.getElementById('quizFloatingBar');
+  
+  if (label) label.textContent = `تم حل ${answeredCount} من أصل ${total} سؤال`;
+  if (bar) {
+    const pct = Math.round((answeredCount / total) * 100);
+    bar.style.width = pct + '%';
+  }
+
+  // Update original top progress bar as well
+  updateProgress();
+}
+
+// ══════════════════════════════════════════════════════
+//  TOGGLE FLAG FROM THE EXAM SHEET
+// ══════════════════════════════════════════════════════
+function toggleFlagSheet(qIdx, btn) {
+  const q = quizQuestions[qIdx];
+  if (!q) return;
+  const origIdx = q.originalIdx;
+  const idxInFlags = flaggedQuestions.indexOf(origIdx);
+  if (idxInFlags > -1) {
+    flaggedQuestions.splice(idxInFlags, 1);
+    btn.querySelector('span:first-child').textContent = '☆';
+    btn.querySelector('span:last-child').textContent = 'تحديد';
+    btn.style.color = 'var(--muted)';
+    btn.style.borderColor = 'var(--border)';
+  } else {
+    flaggedQuestions.push(origIdx);
+    btn.querySelector('span:first-child').textContent = '★';
+    btn.querySelector('span:last-child').textContent = 'محدد';
+    btn.style.color = '#f59e0b';
+    btn.style.borderColor = '#f59e0b';
+  }
+  saveFlaggedToLocalStorage();
+}
+
+// ══════════════════════════════════════════════════════
+//  SUBMIT QUIZ
+// ══════════════════════════════════════════════════════
+function submitQuiz() {
+  const total = quizQuestions.length;
+  const answeredCount = userAnswers.filter(a => a !== null).length;
+  const remaining = total - answeredCount;
+
+  if (remaining > 0) {
+    const confirmMsg = `⚠️ لم تقم بالإجابة على جميع الأسئلة!\n\n• تم الإجابة: ${answeredCount}\n• المتبقي: ${remaining}\n\nهل تريد إنهاء الاختبار الآن وتسليم الورقة؟ (الأسئلة غير المحلولة ستعتبر تخطّي)`;
+    if (!confirm(confirmMsg)) return;
+  }
+
+  // Calculate final score
+  score = 0;
+  wrongCount = 0;
+  skipped = 0;
+
+  quizQuestions.forEach((q, qIdx) => {
+    const chosen = userAnswers[qIdx];
+    if (chosen === null) {
+      skipped++;
+    } else if (chosen === q.ans) {
+      score++;
+    } else {
+      wrongCount++;
+    }
+  });
+
+  showResult();
+}
+
+// ══════════════════════════════════════════════════════
+//  RESULT
+// ══════════════════════════════════════════════════════
+function showResult() {
+  // Clear saved progress since quiz finished!
+  localStorage.removeItem('bio412_quiz_progress');
+  checkQuizProgress();
+
+  const total = quizQuestions.length;
+  const pct   = Math.round((score / total) * 100);
+
+  // High Score Saving
+  const savedHighScore = localStorage.getItem('bio412_high_score') || 0;
+  if (pct > parseInt(savedHighScore)) {
+    localStorage.setItem('bio412_high_score', pct);
+  }
+  updateHomeLabels();
+
+  let emoji, title, sub, color;
+  if      (pct >= 90) { emoji='🏆'; title='Excellent!';      sub='You mastered the genetics question bank!';          color='#22c55e'; }
+  else if (pct >= 75) { emoji='🎉'; title='Great Job!';      sub='Really impressive performance!';         color='#6366f1'; }
+  else if (pct >= 60) { emoji='👍'; title='Good Effort!';    sub="Keep studying, you're almost there!";    color='#f59e0b'; }
+  else if (pct >= 40) { emoji='📚'; title='Keep Going!';     sub='Review your lecture notes and retry.';   color='#f97316'; }
+  else                { emoji='💪'; title="Don't Give Up!";  sub:'Practice makes perfect!';                color='#ef4444'; }
+
+  document.getElementById('resEmoji').textContent = emoji;
+  document.getElementById('resTitle').textContent = title;
+  document.getElementById('resSub').textContent   = sub;
+  document.getElementById('resPct').textContent   = pct + '%';
+  document.getElementById('rC').textContent       = score;
+  document.getElementById('rW').textContent       = wrongCount;
+  document.getElementById('rS').textContent       = skipped;
+
+  const ring = document.getElementById('scoreRing');
+  ring.style.borderColor = color;
+  ring.style.color       = color;
+
+  // Show/Hide Retry Wrong button on Results Screen
+  const btnWrong = document.getElementById('btnRetryWrong');
+  if (btnWrong) {
+    if (wrongCount > 0) {
+      btnWrong.style.display = 'block';
+    } else {
+      btnWrong.style.display = 'none';
+    }
+  }
+
+  showScreen('resultScreen');
+}
+
+// ══════════════════════════════════════════════════════
+//  RETRY ONLY WRONG QUESTIONS OF THE RUN
+// ══════════════════════════════════════════════════════
+function retryWrongOnly() {
+  const wrongQuestionsInRun = quizQuestions.filter((q, idx) => {
+    const ua = userAnswers[idx];
+    return ua !== null && ua !== q.ans;
+  });
+
+  if (wrongQuestionsInRun.length === 0) return;
+
+  quizQuestions = wrongQuestionsInRun.map(q => ({
+    originalIdx: q.originalIdx,
+    lec: q.lec,
+    q: q.q,
+    opts: [...q.opts],
+    ans: q.ans,
+    note: q.note
+  }));
+
+  currentIdx = 0; score = 0; wrongCount = 0; skipped = 0;
+  userAnswers = new Array(quizQuestions.length).fill(null);
+
+  setHeaderQuiz(quizQuestions.length);
+  showScreen('quizScreen');
+  renderQuizSheet();
+}
+
+// ══════════════════════════════════════════════════════
+//  REVIEW
+// ══════════════════════════════════════════════════════
+function goReview() {
+  const list = document.getElementById('revList');
+  list.innerHTML = '';
+  const LABELS = ['A','B','C','D','E'];
+
+  quizQuestions.forEach((q, qi) => {
+    const ua  = userAnswers[qi];
+    const ok  = ua === q.ans;
+    const cls = ua === null ? 'skipped' : ok ? 'correct' : 'wrong';
+
+    let optsHtml = '';
+    q.opts.forEach((opt, oi) => {
+      let c = 'no', icon = LABELS[oi] + '. ';
+      if (oi === q.ans)     { c = 'co'; icon = '✅ '; }
+      if (oi === ua && !ok) { c = 'wo'; icon = '❌ '; }
+      optsHtml += `<div class="rev-opt ${c}">${icon}${opt}</div>`;
+    });
+
+    const sk = ua === null ? ' <em style="color:#f59e0b">(Skipped)</em>' : '';
+    const item = document.createElement('div');
+    item.className = `rev-item ${cls}`;
+    item.innerHTML = `
+      ${q.note ? `<div class="q-note" style="margin-bottom:8px">${q.note}</div>` : ''}
+      <div class="rev-q">Q${qi+1}. ${q.q}${sk}</div>
+      <span class="rev-lec">${q.lec}</span>
+      <div class="rev-opts">${optsHtml}</div>
+    `;
+    list.appendChild(item);
+  });
+
+  showScreen('reviewScreen');
+}
+
+function goResult() { showScreen('resultScreen'); }
+function retryQuiz() { startQuiz(); }
+function goHome()  { setHeaderDefault(); showScreen('homeScreen'); }
+//  QUESTION BANK SCREEN LOGIC
+// ══════════════════════════════════════════════════════
+let activeQBankFilter = 'all';
+
+function goToQBank() {
+  setHeaderDefault();
+  showScreen('qbankScreen');
+  setQBankFilter('all');
+}
+
+function setQBankFilter(filter) {
+  activeQBankFilter = filter;
+
+  // Highlight active button
+  document.querySelectorAll('#qbankFilters button, [id^="qbf_L"]').forEach(btn => {
+    btn.style.borderColor = 'var(--border)';
+    btn.style.background = 'var(--card)';
+    btn.style.color = 'var(--muted)';
+  });
+
+  const activeBtn = document.getElementById('qbf_' + filter);
+  if (activeBtn) {
+    if (filter === 'all') {
+      activeBtn.style.borderColor = '#10b981';
+      activeBtn.style.background = 'rgba(16, 185, 129, 0.1)';
+      activeBtn.style.color = '#10b981';
+    } else if (filter === 'not_longest') {
+      activeBtn.style.borderColor = '#6366f1';
+      activeBtn.style.background = 'rgba(99, 102, 241, 0.1)';
+      activeBtn.style.color = '#6366f1';
+    } else if (filter === 'flagged') {
+      activeBtn.style.borderColor = '#f59e0b';
+      activeBtn.style.background = 'rgba(245, 158, 11, 0.1)';
+      activeBtn.style.color = '#f59e0b';
+    } else if (filter === 'wrong') {
+      activeBtn.style.borderColor = '#ef4444';
+      activeBtn.style.background = 'rgba(239, 68, 68, 0.1)';
+      activeBtn.style.color = '#ef4444';
+    } else {
+      activeBtn.style.borderColor = 'var(--primary)';
+      activeBtn.style.background = 'var(--primary-light)';
+      activeBtn.style.color = 'var(--primary-dark)';
+    }
+  }
+
+  updateQBankFilterCounts();
+  renderQBank();
+}
+
+function updateQBankFilterCounts() {
+  const allBtn = document.getElementById('qbf_all');
+  const flaggedBtn = document.getElementById('qbf_flagged');
+  const wrongBtn = document.getElementById('qbf_wrong');
+
+  if (allBtn) allBtn.textContent = `الكل (${QUESTIONS.length})`;
+  if (flaggedBtn) flaggedBtn.textContent = `المميزة (${flaggedQuestions.length})`;
+  if (wrongBtn) wrongBtn.textContent = `الأخطاء (${allTimeWrong.size})`;
+  const toEssayBtn2 = document.getElementById('qbankToEssayBtn');
+  if (toEssayBtn2) toEssayBtn2.textContent = `📝 الانتقال لبنك الأسئلة المقالية والإجابات (${ESSAY_QUESTIONS.length} سؤال)`;
+}
+
+function renderQBank() {
+  const list = document.getElementById('qbankList');
+  list.innerHTML = '';
+  const LABELS = ['A','B','C','D','E'];
+  const searchQuery = document.getElementById('qbankSearchInput') ? document.getElementById('qbankSearchInput').value.toLowerCase().trim() : '';
+
+  // Filter logic
+  let filtered = [];
+  QUESTIONS.forEach((q, idx) => {
+    const isFlagged = flaggedQuestions.includes(idx);
+    const isWrong = allTimeWrong.has(idx);
+    
+    let match = false;
+    if (activeQBankFilter === 'all') {
+      match = true;
+    } else if (activeQBankFilter === 'flagged') {
+      match = isFlagged;
+    } else if (activeQBankFilter === 'wrong') {
+      match = isWrong;
+    } else if (activeQBankFilter === 'not_longest') {
+      const lengths = q.opts.map(o => o.length);
+      const maxLen = Math.max(...lengths);
+      const correctLen = q.opts[q.ans].length;
+      match = correctLen < maxLen;
+    } else {
+      const lecMap = {
+        'L1': 'Lecture 1',
+        'L2': 'Lecture 2',
+        'L3': 'Lecture 3'
+      };
+      match = q.lec === lecMap[activeQBankFilter];
+    }
+
+    // Apply Search Filter
+    if (match && searchQuery !== '') {
+      const textMatch = q.q.toLowerCase().includes(searchQuery) || q.opts.some(o => o.toLowerCase().includes(searchQuery));
+      match = textMatch;
+    }
+
+    if (match) {
+      filtered.push({
+        originalIdx: idx,
+        lec: q.lec,
+        q: q.q,
+        opts: q.opts,
+        ans: q.ans,
+        note: q.note
+      });
+    }
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = `
+      <div class="q-card" style="text-align: center; padding: 30px 20px;">
+        <div style="font-size: 2.5rem; margin-bottom: 10px;">🔍</div>
+        <div style="font-size: 1rem; font-weight: bold; color: var(--text);">لا توجد نتائج تطابق البحث أو الفلتر!</div>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 4px;">حاول كتابة كلمة بحث أخرى أو تغيير الفلتر.</p>
+      </div>
+    `;
+    return;
+  }
+
+  filtered.forEach((q, fi) => {
+    const isFlagged = flaggedQuestions.includes(q.originalIdx);
+    
+    const lecColors = {
+      'Lecture 1': '#818cf8',
+      'Lecture 2': '#60a5fa',
+      'Lecture 3': '#2dd4bf'
+    };
+    const accentColor = lecColors[q.lec] || 'var(--primary)';
+    
+    let optsHtml = '';
+    q.opts.forEach((opt, oi) => {
+      const isCorrect = oi === q.ans;
+      if (isCorrect) {
+        optsHtml += `
+          <div class="qbank-opt correct">
+            <span style="text-align: left; padding-right: 10px;"><strong>${LABELS[oi]}. ${highlightSearchTerms(opt, searchQuery)}</strong></span>
+            <span style="font-size: 1.15rem; flex-shrink: 0; line-height: 1;">✅</span>
+          </div>
+        `;
+      } else {
+        optsHtml += `
+          <div class="qbank-opt">
+            <span style="text-align: left; padding-right: 10px;">${LABELS[oi]}. ${highlightSearchTerms(opt, searchQuery)}</span>
+            <span style="font-size: 1.15rem; flex-shrink: 0; line-height: 1; opacity: 0; user-select: none;">✅</span>
+          </div>
+        `;
+      }
+    });
+
+    const item = document.createElement('div');
+    item.className = 'qbank-card';
+    item.style.borderLeft = `6px solid ${accentColor}`;
+    item.id = `qbc_${q.originalIdx}`;
+
+    item.innerHTML = `
+      <div class="qbank-meta-row">
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <span class="qbank-num-badge" style="background: rgba(99,102,241,0.06); color: ${accentColor}; border-color: rgba(99,102,241,0.05);">سؤال ${q.originalIdx + 1}</span>
+          <span class="qbank-lec-badge">${q.lec}</span>
+        </div>
+        <button class="qbank-star-btn" onclick="toggleFlagQBank(${q.originalIdx}, this)" style="color: ${isFlagged ? '#f59e0b' : 'var(--muted)'};" title="تحديد السؤال">
+          ${isFlagged ? '★' : '☆'}
+        </button>
+      </div>
+      ${q.note ? `<div class="q-note">${q.note}</div>` : ''}
+      <div class="qbank-question-text">
+        ${highlightSearchTerms(q.q, searchQuery)}
+      </div>
+      
+      <!-- Choices container -->
+      <div id="qbc_choices_${q.originalIdx}" style="display: flex; flex-direction: column; gap: 4px;">
+        ${optsHtml}
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function toggleFlagQBank(origIdx, btn) {
+  const idxInFlags = flaggedQuestions.indexOf(origIdx);
+  if (idxInFlags > -1) {
+    flaggedQuestions.splice(idxInFlags, 1);
+    btn.textContent = '☆';
+    btn.style.color = 'var(--muted)';
+  } else {
+    flaggedQuestions.push(origIdx);
+    btn.textContent = '★';
+    btn.style.color = '#f59e0b';
+  }
+  saveFlaggedToLocalStorage();
+  updateQBankFilterCounts();
+}
+
+// 🔎 SEARCH & BLIND RECALL HELPER FUNCTIONS
+let blindRecallActive = false;
+
+function searchQBank() {
+  renderQBank();
+}
+
+function toggleBlindRecall() {
+  const toggle = document.getElementById('blindRecallToggle');
+  blindRecallActive = toggle.checked;
+  renderQBank();
+}
+
+function revealSingleQBankAnswer(origIdx) {
+  const choices = document.getElementById(`qbc_choices_${origIdx}`);
+  const btn = document.getElementById(`qbc_reveal_btn_${origIdx}`);
+  if (choices && btn) {
+    choices.style.display = 'flex';
+    btn.style.display = 'none';
+  }
+}
+
+function highlightSearchTerms(text, query) {
+  if (!query) return text;
+  const regex = new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+  return text.replace(regex, '<mark style="background: #fde047; color: #1e1b4b; padding: 1px 4px; border-radius: 4px; font-weight: 800;">$1</mark>');
+}
+
+// ══════════════════════════════════════════════════════
+//  📝 ESSAY QUESTION BANK  (18 essay questions + model answers)
+//  Lecture 7 (slides) → 6 Qs  |  Lecture 2 (AI) → 6 Qs  |  Lecture 3 (AI) → 6 Qs
+// ══════════════════════════════════════════════════════
+const ESSAY_QUESTIONS = [
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Define biological sequence analysis. What is its scope?",
+    a: "• **Definition:** the process of applying computational and analytical methods to DNA, RNA or protein sequences in order to understand their features, functions, structures and evolutionary relationships.\n• **Scope:**\n• Comparing sequences to find similarities that indicate relatedness.\n• Identifying intrinsic features such as active sites and regulatory elements.\n• Discovering sequence variations, including mutations and polymorphisms.\n• Reconstructing evolutionary histories.\n## 📌 المصدر\n• Lecture 1, slide 13"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "What are the methodologies used in biological sequence analysis?",
+    a: "• Sequence alignment.\n• Database searches.\n• Motif finding.\n• Probabilistic models and machine-learning approaches — used to analyze the biological meaning behind sequence data.\n## 📌 المصدر\n• Lecture 1, slide 13"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Why is bioinformatics a necessary tool for scientists who use molecular biology methods?",
+    a: "• Bioinformatics is the study of the relationships between biological sequences and the implications of these relationships for macromolecular structure, function and evolution.\n• Scientists must process raw DNA sequences and assign structure and function to gene products.\n• Its methods draw on computer science, probability, and molecular, structural and evolutionary biology.\n• The biomedical researcher must understand the computational and scientific basis of the programs used, in order to use them correctly.\n## 📌 المصدر\n• Lecture 1, slide 3"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Define the Central Dogma of Life and explain the direction of information flow.",
+    a: "• **Definition:** a fundamental theory in molecular biology that describes the flow of genetic information within a biological system.\n• Genetic information flows only in one direction: **DNA → RNA → Protein**.\n• It involves two steps: **transcription** (DNA is transcribed into messenger RNA) and **translation** (mRNA is used as a template to synthesize proteins).\n• Proteins perform most cellular functions and are made based on the code carried by the nucleotide sequence in the DNA.\n## 📌 المصدر\n• Lecture 1, slide 10"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Define transcription and translation, and state the template and product of each.",
+    a: "• **Transcription**\n• Definition: DNA is transcribed into messenger RNA (mRNA).\n• Template: DNA.\n• Product: mRNA.\n• Order in the Central Dogma: first step (DNA → RNA).\n• **Translation**\n• Definition: mRNA is used as a template to synthesize proteins.\n• Template: mRNA.\n• Product: protein (chain of amino acids).\n• Order in the Central Dogma: second step (RNA → protein).\n## 📌 المصدر\n• Lecture 1, slides 10 and 12"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Define DNA. Describe its structure, bases and function.",
+    a: "• DNA (Deoxyribonucleic Acid) is a double-stranded molecule that stores the genetic blueprint of an organism.\n• Consists of four nucleotide bases: adenine (A), thymine (T), cytosine (C) and guanine (G).\n• DNA sequences are typically stable and carry the hereditary information passed from one generation to the next.\n• Role in the Central Dogma: the stable storage of the genetic code.\n## 📌 المصدر\n• Lecture 1, slides 11–12"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Define RNA. How does it differ from DNA? Name its types and the function of each.",
+    a: "• RNA (Ribonucleic Acid) is usually single-stranded and functions as the intermediary between DNA and proteins.\n• **Differences from DNA**\n• RNA is usually single-stranded; DNA is double-stranded.\n• RNA uses ribose sugar (DNA: deoxyribose) and has uracil (U) instead of thymine (T).\n• RNA sequences are shorter and more transient; DNA sequences are stable.\n• **Types of RNA**\n• mRNA (messenger): carries the genetic code from DNA to the ribosomes.\n• tRNA (transfer): brings amino acids to the ribosomes during protein synthesis.\n• rRNA (ribosomal): forms part of the ribosome structure.\n## 📌 المصدر\n• Lecture 1, slide 11"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Define proteins. How are their sequences determined, and what determines their function?",
+    a: "• Proteins are composed of chains of amino acids.\n• Their amino acid sequences are specified by the nucleotide sequences in mRNA through the genetic code.\n• The sequences fold into complex three-dimensional structures, and these structures determine their function.\n• Proteins are highly diverse and perform enzymatic activity, signalling and structural roles.\n## 📌 المصدر\n• Lecture 1, slide 12"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Compare DNA, RNA and proteins.",
+    a: "• **Building units**\n• DNA: nucleotides (A, T, C, G).\n• RNA: nucleotides (A, U, C, G).\n• Protein: amino acids (20 letters).\n• **Strands / shape**\n• DNA: double-stranded.\n• RNA: usually single-stranded.\n• Protein: folded chain (3D structure).\n• **Role**\n• DNA: stable storage of the genetic code.\n• RNA: messenger and translator.\n• Protein: functional molecules executing cellular processes.\n• **Stability**\n• DNA: stable, hereditary.\n• RNA: shorter and more transient.\n• Protein: determined by its fold.\n## 📌 المصدر\n• Lecture 1, slides 11, 12, 20"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "What is the FASTA format? Describe its structure and advantages.",
+    a: "• FASTA is the most widely used format for nucleotide or protein sequences.\n• **Structure:** the file starts with a single-line description preceded by the '>' symbol, followed by lines of sequence data in single-letter codes (A, T/U, G, C for nucleotides; single-letter amino-acid codes for proteins).\n• **Advantage:** simple and human-readable, so it is easy to parse and manipulate by software tools.\n## 📌 المصدر\n• Lecture 1, slide 14"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "What is the GenBank format? How does it differ from FASTA?",
+    a: "• GenBank is a richer format maintained by the NCBI. It includes not only the sequence but also extensive annotations such as gene locations, coding regions and functional information.\n• It is a structured plain-text format with defined fields for metadata, features and references alongside the raw sequence.\n• **Difference:** FASTA = one description line + sequence only (simple); GenBank = sequence + structured annotations (metadata, features, references).\n## 📌 المصدر\n• Lecture 1, slides 14–15"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Define NCBI and state what it provides.",
+    a: "• NCBI is part of the U.S. National Library of Medicine.\n• It hosts GenBank, a comprehensive database of publicly available nucleotide sequences and related information.\n• It receives large-scale sequencing data and individual submissions.\n• It provides integrated search, retrieval and analysis tools, and is widely used for genomic research.\n## 📌 المصدر\n• Lecture 1, slide 16"
+  },
+  {
+    lec: "L1", lecName: "Algorithms & Hashing", ai: true,
+    q: "Define the EMBL database and explain how it relates to GenBank and DDBJ.",
+    a: "• The EMBL Nucleotide Sequence Database, maintained at the European Bioinformatics Institute (EBI), is Europe's primary collection of nucleotide sequences.\n• It exchanges data daily with GenBank and DDBJ to ensure synchronized and comprehensive coverage.\n• It accepts submissions from individual scientists, genome centers and patent offices.\n• It organizes data taxonomically and by data type (e.g. expressed sequence tags, high-throughput sequences).\n## 📌 المصدر\n• Lecture 1, slide 17"
+  }
+];
+
+// ══════════════════════════════════════════════════════
+//  ESSAY BANK STATE
+// ══════════════════════════════════════════════════════
+let activeEssayFilter = 'all';
+let essayStarred = [];      // indices
+let essayStudied = [];      // indices
+let essayOpen    = [];      // indices whose answer is currently shown
+
+function initEssayLocalStorage() {
+  try {
+    essayStarred = JSON.parse(localStorage.getItem('bio412_essay_starred') || '[]');
+    essayStudied = JSON.parse(localStorage.getItem('bio412_essay_studied') || '[]');
+  } catch (e) { essayStarred = []; essayStudied = []; }
+}
+
+function saveEssayLocalStorage() {
+  try {
+    localStorage.setItem('bio412_essay_starred', JSON.stringify(essayStarred));
+    localStorage.setItem('bio412_essay_studied', JSON.stringify(essayStudied));
+  } catch (e) {}
+}
+
+function escapeEssayText(t) {
+  return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function boldEssayText(t) {
+  return t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+// Converts the plain-text model answer into styled HTML
+function formatEssayAnswer(raw) {
+  const lines = String(raw).split('\n');
+  let html = '';
+  let inList = false;
+  let inTable = false;
+
+  const closeList  = () => { if (inList)  { html += '</ul>'; inList = false; } };
+  const closeTable = () => { if (inTable) { html += '</table>'; inTable = false; } };
+
+  lines.forEach(lineRaw => {
+    const line = lineRaw.trim();
+    if (!line) { closeList(); closeTable(); return; }
+
+    // Table row
+    if (line.startsWith('|')) {
+      closeList();
+      const cells = line.split('|').filter((c, i, arr) => !(i === 0 && c.trim() === '') && !(i === arr.length - 1 && c.trim() === ''));
+      if (!inTable) {
+        inTable = true;
+        html += '<div style="overflow-x:auto; margin:8px 0;"><table style="width:100%; border-collapse:collapse; font-size:clamp(0.72rem,2.4vw,0.82rem); background:var(--card);">';
+        html += '<tr>' + cells.map(c => `<th style="border:1.5px solid var(--border); padding:8px; background:var(--primary-light); color:var(--primary-dark); font-weight:800; text-align:left;">${boldEssayText(escapeEssayText(c.trim()))}</th>`).join('') + '</tr>';
+        return;
+      }
+      html += '<tr>' + cells.map(c => `<td style="border:1.5px solid var(--border); padding:8px; text-align:left; color:var(--text);">${boldEssayText(escapeEssayText(c.trim()))}</td>`).join('') + '</tr>';
+      return;
+    }
+    closeTable();
+
+    // Sub-heading
+    if (line.startsWith('## ')) {
+      closeList();
+      html += `<h4>${boldEssayText(escapeEssayText(line.slice(3)))}</h4>`;
+      return;
+    }
+
+    // Arrow line (central dogma)
+    if (line.startsWith('->')) {
+      closeList();
+      html += `<div class="essay-arrow">${escapeEssayText(line.replace('->', '').trim())}</div>`;
+      return;
+    }
+
+    // Bullet
+    if (line.startsWith('•')) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += `<li>${boldEssayText(escapeEssayText(line.slice(1).trim()))}</li>`;
+      return;
+    }
+
+    // Normal paragraph
+    closeList();
+    html += `<p>${boldEssayText(escapeEssayText(line))}</p>`;
+  });
+
+  closeList();
+  closeTable();
+  return html;
+}
+
+// ══════════════════════════════════════════════════════
+//  ESSAY BANK UI
+// ══════════════════════════════════════════════════════
+function goToEssayBank() {
+  setHeaderDefault();
+  showScreen('essayScreen');
+  initEssayLocalStorage();
+  setEssayFilter('all');
+}
+
+function setEssayFilter(filter) {
+  activeEssayFilter = filter;
+
+  document.querySelectorAll('[id^="ef_"]').forEach(btn => {
+    btn.style.borderColor = 'var(--border)';
+    btn.style.background = 'var(--card)';
+    btn.style.color = 'var(--muted)';
+  });
+
+  const activeBtn = document.getElementById('ef_' + filter);
+  if (activeBtn) {
+    if (filter === 'star') {
+      activeBtn.style.borderColor = '#f59e0b';
+      activeBtn.style.background = 'rgba(245,158,11,0.10)';
+      activeBtn.style.color = '#f59e0b';
+    } else {
+      activeBtn.style.borderColor = 'var(--primary)';
+      activeBtn.style.background = 'var(--primary-light)';
+      activeBtn.style.color = 'var(--primary-dark)';
+    }
+  }
+
+  renderEssayBank();
+}
+
+function essayMatches(q, idx) {
+  if (activeEssayFilter === 'all')  return true;
+  if (activeEssayFilter === 'star') return essayStarred.includes(idx);
+  return q.lec === activeEssayFilter;
+}
+
+function renderEssayBank() {
+  const list = document.getElementById('essayList');
+  if (!list) return;
+  list.innerHTML = '';
+
+  const searchInput = document.getElementById('essaySearchInput');
+  const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+  // Update counters on the filter buttons
+  const starBtn = document.getElementById('ef_star');
+  if (starBtn) starBtn.textContent = `★ المحفوظة (${essayStarred.length})`;
+  const allEssayBtn = document.getElementById('ef_all');
+  if (allEssayBtn) allEssayBtn.textContent = `📁 الكل (${ESSAY_QUESTIONS.length})`;
+  const toEssayBtn = document.getElementById('qbankToEssayBtn');
+  if (toEssayBtn) toEssayBtn.textContent = `📝 الانتقال لبنك الأسئلة المقالية والإجابات (${ESSAY_QUESTIONS.length} سؤال)`;
+
+  const filtered = [];
+  ESSAY_QUESTIONS.forEach((q, idx) => {
+    if (!essayMatches(q, idx)) return;
+    if (query !== '' && !(q.q.toLowerCase().includes(query) || q.a.toLowerCase().includes(query))) return;
+    filtered.push(idx);
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = `
+      <div class="q-card" style="text-align: center; padding: 30px 20px;">
+        <div style="font-size: 2.5rem; margin-bottom: 10px;">🔍</div>
+        <div style="font-size: 1rem; font-weight: bold; color: var(--text);">لا توجد أسئلة تطابق البحث أو الفلتر!</div>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 4px;">جرّب كلمة بحث أخرى أو غيّر الفلتر.</p>
+      </div>`;
+    updateEssayProgress();
+    return;
+  }
+
+  // 🤖 أسئلة الـ AI تتظهر الأول فوق باقي الأسئلة
+  filtered.sort((a, b) => (ESSAY_QUESTIONS[b].ai ? 1 : 0) - (ESSAY_QUESTIONS[a].ai ? 1 : 0));
+
+  let aiBannerShown = false;
+  filtered.forEach((idx, pos) => {
+    const q = ESSAY_QUESTIONS[idx];
+
+    if (q.ai && !aiBannerShown) {
+      aiBannerShown = true;
+      const aiTotal = ESSAY_QUESTIONS.filter(x => x.ai).length;
+      const banner = document.createElement('div');
+      banner.className = 'essay-ai-banner';
+      banner.id = 'essayAiBanner';
+      banner.textContent = `🤖 أسئلة معمولة بالـ AI — متوقع إنها تيجي في الامتحان (${aiTotal} سؤال)`;
+      list.appendChild(banner);
+    }
+    const isStarred = essayStarred.includes(idx);
+    const isStudied = essayStudied.includes(idx);
+    const isOpen    = essayOpen.includes(idx);
+
+    const accent = { 'L1': '#818cf8', 'L2': '#60a5fa', 'L3': '#2dd4bf' }[q.lec] || 'var(--primary)';
+
+    const card = document.createElement('div');
+    card.className = 'essay-card' + (isStudied ? ' studied' : '');
+    card.id = 'ec_' + idx;
+    card.style.borderLeftColor = isStudied ? '#10b981' : accent;
+
+    card.innerHTML = `
+      <div class="essay-meta">
+        <div class="essay-badges">
+          <span class="essay-num">سؤال <bdi>${pos + 1}</bdi></span>
+          <span class="essay-lec-badge">🎓 ${q.lecName}</span>
+          ${q.ai ? '<span class="essay-ai-badge" title="هذه الأسئلة من إعداد الذكاء الاصطناعي">🤖 مُولّد بالـ AI</span>' : ''}
+        </div>
+        <button onclick="toggleEssayStar(${idx})" style="background:none; border:none; cursor:pointer; font-size:1.25rem; line-height:1; color:${isStarred ? '#f59e0b' : 'var(--muted)'};" title="حفظ السؤال">${isStarred ? '★' : '☆'}</button>
+      </div>
+
+      <div class="essay-q-text">${escapeEssayText(q.q)}</div>
+
+      <div class="essay-actions">
+        <button class="essay-btn" onclick="toggleEssayAnswer(${idx})">${isOpen ? '🙈 اخفِ الإجابة' : '👁️ اعرض الإجابة'}</button>
+        <button class="essay-btn ghost ${isStudied ? 'done-on' : ''}" onclick="toggleEssayStudied(${idx})">${isStudied ? '✅ تمت مذاكرته' : '☑️ علّم كمذاكرة'}</button>
+      </div>
+
+      <div class="essay-answer ${isOpen ? 'show' : ''}" id="ea_${idx}">
+        <div class="essay-answer-head">✅ الإجابة النموذجية / Model Answer</div>
+        ${formatEssayAnswer(q.a)}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  updateEssayProgress();
+}
+
+function toggleEssayAnswer(idx) {
+  const pos = essayOpen.indexOf(idx);
+  if (pos > -1) essayOpen.splice(pos, 1); else essayOpen.push(idx);
+  renderEssayBank();
+}
+
+function revealAllEssays(show) {
+  essayOpen = show ? ESSAY_QUESTIONS.map((q, i) => i) : [];
+  renderEssayBank();
+}
+
+function toggleEssayStar(idx) {
+  const pos = essayStarred.indexOf(idx);
+  if (pos > -1) essayStarred.splice(pos, 1); else essayStarred.push(idx);
+  saveEssayLocalStorage();
+  renderEssayBank();
+}
+
+function toggleEssayStudied(idx) {
+  const pos = essayStudied.indexOf(idx);
+  if (pos > -1) essayStudied.splice(pos, 1); else essayStudied.push(idx);
+  saveEssayLocalStorage();
+  renderEssayBank();
+}
+
+function updateEssayProgress() {
+  const total = ESSAY_QUESTIONS.length;
+  const done  = essayStudied.length;
+  const pct   = total ? Math.round((done / total) * 100) : 0;
+
+  const lbl  = document.getElementById('essayProgressLabel');
+  const pctEl = document.getElementById('essayProgressPct');
+  const fill = document.getElementById('essayProgressFill');
+  if (lbl)   lbl.textContent = `تمت مذاكرة ${done} من ${total} سؤال`;
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (fill)  fill.style.width = pct + '%';
+}
+
+function resetEssayProgress() {
+  if (!confirm('هل تريد تصفير تقدّم المذاكرة (وإلغاء كل علامات "تمت المذاكرة")؟')) return;
+  essayStudied = [];
+  saveEssayLocalStorage();
+  renderEssayBank();
+}
+
+// ══════════════════════════════════════════════════════
+//  🧠 RETENTION GAMES — رتّب الخطوات + وصّل المصطلح
+// ══════════════════════════════════════════════════════
+const ORDER_SETS = [
+  {
+    lec: "L1",
+    title: "🔁 خطوات خوارزمية Rabin-Karp",
+    sub: "BIO412 · Pattern Matching",
+    steps: [
+      { en: "Compute the hash value of the pattern P", ar: "حساب قيمة الهاش للـ pattern" },
+      { en: "Compute the hash value of the first substring of T (length m)", ar: "حساب هاش أول substring من النص بنفس طول الـ pattern" },
+      { en: "Compare the two hash values", ar: "مقارنة قيمتي الهاش" },
+      { en: "If the hashes match, verify the characters one by one", ar: "لو الهاش متساوي، نقارن الحروف واحد واحد للتأكيد" },
+      { en: "Slide the window one position using the rolling hash", ar: "نحرّك النافذة خطوة باستخدام الـ rolling hash" },
+      { en: "Repeat until the end of the text", ar: "نكرر لحد آخر النص" }
+    ]
+  },
+  {
+    lec: "L1",
+    title: "⚙️ خطوات حساب الهاش بـ Rolling Hash",
+    sub: "BIO412 · Hashing",
+    steps: [
+      { en: "Compute the hash of the first window", ar: "حساب هاش أول نافذة" },
+      { en: "Remove the value of the outgoing character (multiplied by d^(m-1))", ar: "نشيل قيمة الحرف الخارج من النافذة" },
+      { en: "Multiply the remaining value by the base d", ar: "نضرب الناتج في الأساس d" },
+      { en: "Add the value of the new incoming character", ar: "نضيف قيمة الحرف الجديد الداخل" },
+      { en: "Apply the modulus q to keep the value in range", ar: "نطبّق الموديولس q لتبقى القيمة في المدى" }
+    ]
+  },
+  {
+    lec: "L1",
+    title: "🔎 خطوات خوارزمية Naïve",
+    sub: "BIO412 · Exact Matching",
+    steps: [
+      { en: "Align the pattern with the first position in the text", ar: "نضع الـ pattern عند أول موضع في النص" },
+      { en: "Compare the characters one by one", ar: "مقارنة الحروف واحد واحد" },
+      { en: "If all characters match, report the starting index", ar: "لو كل الحروف متطابقة نطبع مكان البداية" },
+      { en: "Shift the pattern one position to the right", ar: "نحرّك الـ pattern خطوة لليمين" },
+      { en: "Repeat until the pattern can no longer fit in the text", ar: "نكرر لحد ما الـ pattern ميبقاش له مكان في النص" }
+    ]
+  },
+  {
+    lec: "L2",
+    title: "🧬 مسار الـ Central Dogma",
+    sub: "BIO412 · Molecular Biology",
+    steps: [
+      { en: "DNA carries the genetic information", ar: "الـ DNA شايل المعلومات الوراثية" },
+      { en: "Transcription copies DNA into mRNA", ar: "النسخ (Transcription) يحوّل الـ DNA لـ mRNA" },
+      { en: "mRNA moves to the ribosome", ar: "الـ mRNA يروح للرايبوسوم" },
+      { en: "Translation reads the mRNA to build a protein", ar: "الترجمة (Translation) تبني البروتين" },
+      { en: "The protein performs the cellular function", ar: "البروتين ينفّذ وظيفته في الخلية" }
+    ]
+  }
+];
+
+const MATCH_PAIRS = [
+  { lec: "L1", term: "Rabin-Karp", ar: "رابين-كارب", def: "A pattern matching algorithm that compares hash values first and verifies characters only when the hashes match." },
+  { lec: "L1", term: "Hash collision", ar: "تصادم الهاش", def: "When two different strings produce the same numeric hash value." },
+  { lec: "L1", term: "Rolling hash", ar: "الهاش المتدحرج", def: "Updating the hash of the next window in O(1) instead of recomputing it from scratch." },
+  { lec: "L1", term: "Prime modulus (q)", ar: "الموديولس الأولي", def: "A sufficiently large prime number used to spread hash values and make collisions less likely." },
+  { lec: "L1", term: "Naïve algorithm", ar: "الخوارزمية الساذجة", def: "Slides the pattern one position at a time and compares all characters at every alignment." },
+  { lec: "L1", term: "Exact pattern matching", ar: "المطابقة التامة", def: "Finding all positions where the pattern P occurs exactly in the text T." },
+  { lec: "L1", term: "Alignment", ar: "المحاذاة", def: "A position at which the pattern is placed against the text to compare characters." },
+  { lec: "L1", term: "k-mer", ar: "الكايمر", def: "A substring of length k extracted from a sequence." },
+  { lec: "L1", term: "Worst case (Naïve)", ar: "أسوأ حالة", def: "O(n × m), when all characters must be compared at every alignment." },
+  { lec: "L2", term: "Central Dogma", ar: "العقيدة المركزية", def: "Describes the flow of genetic information: DNA → mRNA → Protein." },
+  { lec: "L2", term: "Transcription", ar: "النسخ", def: "The process that converts DNA into messenger RNA (mRNA)." },
+  { lec: "L2", term: "Translation", ar: "الترجمة", def: "The process that uses mRNA as a template to synthesize proteins." },
+  { lec: "L2", term: "Substring", ar: "السلاسل الفرعية المتصلة", def: "A contiguous part of a string, with no gaps." },
+  { lec: "L2", term: "Subsequence", ar: "التتابع", def: "Characters taken in order but not necessarily consecutive." },
+  { lec: "L2", term: "Prefix", ar: "البادئة", def: "S is a prefix of T if there exists a string u such that T = Su." },
+  { lec: "L2", term: "Alphabet (Σ)", ar: "الأبجدية", def: "The set of symbols used in a sequence, e.g. {A, C, G, T} for DNA." },
+  { lec: "L2", term: "Digit mapping (base d)", ar: "ترميز الأرقام", def: "Mapping each symbol to a number (A=0, C=1, G=2, T=3) to compute hash values." },
+  { lec: "L3", term: "BIO412", ar: "كود المادة", def: "The course code for Biological Sequence Analysis." },
+  { lec: "L3", term: "Prerequisite course", ar: "المتطلب السابق", def: "Cell and Molecular Biology (BIO315)." },
+  { lec: "L3", term: "Course textbook", ar: "الكتاب المرجعي", def: "Bioinformatics and Functional Genomics (3rd Edition) by Jonathan Pevsner." },
+  { lec: "L3", term: "Attendance rule", ar: "قاعدة الحضور", def: "Missing 25% of the meetings without a strong excuse results in a grade of W." },
+  { lec: "L3", term: "Final exam weight", ar: "وزن الامتحان النهائي", def: "40% of the total evaluation criteria." }
+];
+
+let rtTab = 'order';
+
+/* ───────── ORDER GAME STATE ───────── */
+let rtSetIdx = 0;
+let rtPool = [];       // remaining step indices (shuffled)
+let rtAnswer = [];     // chosen order
+let rtChecked = false;
+
+// ══════════════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════════════
+function goToRetention() {
+  setHeaderDefault();
+  showScreen('retentionScreen');
+  switchRetentionTab(rtTab);
+}
+
+function switchRetentionTab(tab) {
+  rtTab = tab;
+  const orderTab  = document.getElementById('rtTab_order');
+  const matchTab  = document.getElementById('rtTab_match');
+  const orderPane = document.getElementById('rtPaneOrder');
+  const matchPane = document.getElementById('rtPaneMatch');
+  if (!orderTab) return;
+
+  orderTab.classList.toggle('active', tab === 'order');
+  matchTab.classList.toggle('active', tab === 'match');
+  orderPane.style.display = (tab === 'order') ? 'block' : 'none';
+  matchPane.style.display = (tab === 'match') ? 'block' : 'none';
+
+  if (tab === 'order') renderRtOrderChips();
+  else {
+    renderRtMatchChips();
+    if (!rtMatchStarted) startRtMatchRound();
+  }
+}
+
+function rtRange(n) {
+  const a = [];
+  for (let i = 0; i < n; i++) a.push(i);
+  return a;
+}
+
+function rtShuffle(a) { shuffle(a); return a; }
+
+// ══════════════════════════════════════════════════════
+//  GAME 1 — ORDER THE STEPS
+// ══════════════════════════════════════════════════════
+function renderRtOrderChips() {
+  const wrap = document.getElementById('rtOrderChips');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  ORDER_SETS.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'rt-chip' + (i === rtSetIdx ? ' active' : '');
+    b.textContent = s.title;
+    b.onclick = () => startRtOrderSet(i);
+    wrap.appendChild(b);
+  });
+  if (rtPool.length === 0 && rtAnswer.length === 0 && !rtChecked) {
+    rtPool = rtShuffle(rtRange(ORDER_SETS[rtSetIdx].steps.length));
+  }
+  renderRtOrderArea();
+}
+
+function startRtOrderSet(i) {
+  rtSetIdx = i;
+  rtChecked = false;
+  rtAnswer = [];
+  rtPool = rtShuffle(rtRange(ORDER_SETS[i].steps.length));
+  renderRtOrderChips();
+}
+
+function rtPickStep(idx) {
+  if (rtChecked) return;
+  const p = rtPool.indexOf(idx);
+  if (p > -1) {
+    rtPool.splice(p, 1);
+    rtAnswer.push(idx);
+    renderRtOrderArea();
+  }
+}
+
+function rtUnpickStep(idx) {
+  if (rtChecked) return;
+  const p = rtAnswer.indexOf(idx);
+  if (p > -1) {
+    rtAnswer.splice(p, 1);
+    rtPool.push(idx);
+    renderRtOrderArea();
+  }
+}
+
+function rtCheckOrder() {
+  const total = ORDER_SETS[rtSetIdx].steps.length;
+  if (rtAnswer.length < total) {
+    alert('لسه ما رتّبتش كل الخطوات! اضغط على كل الخطوات الأول.');
+    return;
+  }
+  rtChecked = true;
+  renderRtOrderArea();
+}
+
+function rtResetOrder() {
+  rtChecked = false;
+  rtAnswer = [];
+  rtPool = rtShuffle(rtRange(ORDER_SETS[rtSetIdx].steps.length));
+  renderRtOrderArea();
+}
+
+function rtShowSolution() {
+  rtChecked = true;
+  rtAnswer = rtRange(ORDER_SETS[rtSetIdx].steps.length);
+  rtPool = [];
+  renderRtOrderArea();
+}
+
+function renderRtOrderArea() {
+  const box = document.getElementById('rtOrderArea');
+  if (!box) return;
+  const set = ORDER_SETS[rtSetIdx];
+  const total = set.steps.length;
+
+  let poolHtml = '';
+  if (rtPool.length === 0) {
+    poolHtml = `<div class="rt-empty">كل الخطوات اتاختارت ✓ — دوس "تحقق من الترتيب"</div>`;
+  } else {
+    rtPool.forEach(i => {
+      poolHtml += `
+        <div class="rt-step pool" onclick="rtPickStep(${i})">
+          <div class="rt-num">＋</div>
+          <div class="rt-txt">
+            <div class="rt-en">${escapeEssayText(set.steps[i].en)}</div>
+            <div class="rt-ar">${escapeEssayText(set.steps[i].ar)}</div>
+          </div>
+        </div>`;
+    });
+  }
+
+  let answerHtml = '';
+  if (rtAnswer.length === 0) {
+    answerHtml = `<div class="rt-empty">دوس على الخطوات اللي فوق بالترتيب الصحيح ✋</div>`;
+  } else {
+    rtAnswer.forEach((stepIdx, pos) => {
+      let cls = '';
+      let mark = (pos + 1);
+      if (rtChecked) {
+        if (stepIdx === pos) { cls = 'ok'; mark = '✓'; }
+        else { cls = 'bad'; mark = '✗'; }
+      }
+      answerHtml += `
+        <div class="rt-step ${cls}" onclick="rtUnpickStep(${stepIdx})">
+          <div class="rt-num">${mark}</div>
+          <div class="rt-txt">
+            <div class="rt-en">${escapeEssayText(set.steps[stepIdx].en)}</div>
+            <div class="rt-ar">${escapeEssayText(set.steps[stepIdx].ar)}</div>
+          </div>
+        </div>`;
+    });
+  }
+
+  let feedback = '';
+  if (rtChecked) {
+    const correctCount = rtAnswer.filter((s, p) => s === p).length;
+    if (correctCount === total) {
+      feedback = `<div class="rt-feedback good">🎉 برافو! الترتيب كله صح (${total}/${total}) — جاهز للامتحان 👏</div>`;
+    } else {
+      feedback = `<div class="rt-feedback bad">❌ الترتيب فيه ${total - correctCount} خطأ — الصح ${correctCount}/${total}. شوف الترتيب الصح تحت 👇</div>`;
+    }
+  }
+
+  box.innerHTML = `
+    <div class="rt-card">
+      <div class="rt-title">${set.title}</div>
+      <div class="rt-sub">${set.sub}</div>
+
+      <div class="rt-section-label">الخطوات (مبعترة):</div>
+      ${poolHtml}
+
+      <div class="rt-section-label">ترتيبك (${rtAnswer.length}/${total}):</div>
+      ${answerHtml}
+
+      ${feedback}
+
+      <div class="rt-actions">
+        <button class="rt-btn green" onclick="rtCheckOrder()">✅ تحقق من الترتيب</button>
+        <button class="rt-btn ghost" onclick="rtResetOrder()">🔄 خلط من جديد</button>
+        <button class="rt-btn ghost" onclick="rtShowSolution()">👀 وريني الحل</button>
+      </div>
+    </div>`;
+}
+
+/* ───────── MATCH GAME STATE ───────── */
+let rtMatchFilter = 'all';
+let rtMatchPairs = [];        // مصطلحات الجولة الحالية
+let rtMatchTermOrder = [];
+let rtMatchDefOrder = [];
+let rtMatchSelected = null;
+let rtMatchDone = [];
+let rtMatchWrong = [];
+let rtMatchMistakes = 0;
+let rtMatchStarted = false;
+let rtSolved = [];            // مصطلحات اتحلت قبل كده: "LEC|Term"
+let rtSolvedLoaded = false;
+
+// ══════════════════════════════════════════════════════
+//  📊 تتبّع تقدّم كل محاضرة (محفوظ في المتصفح)
+// ══════════════════════════════════════════════════════
+function rtKey(p) { return p.lec + '|' + p.term; }
+
+function rtLoadSolved() {
+  if (rtSolvedLoaded) return;
+  try { rtSolved = JSON.parse(localStorage.getItem('bio412_rt_solved') || '[]'); }
+  catch (e) { rtSolved = []; }
+  rtSolvedLoaded = true;
+}
+
+function rtSaveSolved() {
+  try { localStorage.setItem('bio412_rt_solved', JSON.stringify(rtSolved)); } catch (e) {}
+}
+
+function rtLecPairs(lec) { return MATCH_PAIRS.filter(p => p.lec === lec); }
+function rtLecTotal(lec) { return rtLecPairs(lec).length; }
+function rtLecDone(lec)  { return rtLecPairs(lec).filter(p => rtSolved.includes(rtKey(p))).length; }
+function rtAllDone()     { return MATCH_PAIRS.filter(p => rtSolved.includes(rtKey(p))).length; }
+function rtLecLabel(lec) { const l = RT_LECS.find(x => x.id === lec); return l ? l.label : lec; }
+
+function renderRtMatchChips() {
+  rtLoadSolved();
+  const wrap = document.getElementById('rtMatchChips');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+
+  const mkBtn = (id, label, active) => {
+    const b = document.createElement('button');
+    b.className = 'rt-chip' + (active ? ' active' : '');
+    b.textContent = label;
+    b.onclick = () => {
+      if (rtMatchFilter === id) return;     // نفس المحاضرة → مفيش خلط جديد
+      rtMatchFilter = id;
+      startRtMatchRound();
+    };
+    wrap.appendChild(b);
+  };
+
+  const dAll = rtAllDone(), tAll = MATCH_PAIRS.length;
+  mkBtn('all', (dAll >= tAll ? '📁 الكل ✅' : `📁 الكل (${dAll}/${tAll})`), rtMatchFilter === 'all');
+
+  RT_LECS.forEach(l => {
+    const tot = rtLecTotal(l.id), done = rtLecDone(l.id);
+    const lbl = (tot > 0 && done >= tot) ? `${l.label} ✅` : `${l.label} (${done}/${tot})`;
+    mkBtn(l.id, lbl, rtMatchFilter === l.id);
+  });
+}
+
+function startRtMatchRound(force) {
+  rtLoadSolved();
+
+  // مراجعة محاضرة من الأول: نصفّر اللي اتحل فيها
+  if (force && rtMatchFilter !== 'all') {
+    rtLecPairs(rtMatchFilter).forEach(p => {
+      const i = rtSolved.indexOf(rtKey(p));
+      if (i > -1) rtSolved.splice(i, 1);
+    });
+    rtSaveSolved();
+  }
+
+  let pool;
+  if (rtMatchFilter === 'all') {
+    const uns = MATCH_PAIRS.filter(p => !rtSolved.includes(rtKey(p)));
+    const src = uns.length >= 8 ? uns : MATCH_PAIRS;
+    pool = rtShuffle(src.slice()).slice(0, Math.min(8, src.length));
+  } else {
+    // كل مصطلحات المحاضرة اللي لسه ما اتحلتش — مش عيّنة عشوائية
+    pool = rtLecPairs(rtMatchFilter).filter(p => !rtSolved.includes(rtKey(p)));
+  }
+
+  rtMatchPairs = pool.slice();
+  rtMatchTermOrder = rtShuffle(rtRange(rtMatchPairs.length));
+  rtMatchDefOrder  = rtShuffle(rtRange(rtMatchPairs.length));
+  rtMatchSelected = null;
+  rtMatchDone = [];
+  rtMatchWrong = [];
+  rtMatchMistakes = 0;
+  rtMatchStarted = true;
+
+  renderRtMatchChips();
+  renderRtMatchArea();
+}
+
+function rtPickTerm(i) {
+  if (rtMatchDone.includes(i)) return;
+  rtMatchSelected = (rtMatchSelected === i) ? null : i;
+  renderRtMatchArea();
+}
+
+function rtPickDef(i) {
+  if (rtMatchDone.includes(i)) return;
+  if (rtMatchSelected === null) {
+    renderRtMatchArea();
+    return;
+  }
+  if (rtMatchSelected === i) {
+    // صح ✓
+    rtMatchDone.push(i);
+    const k = rtKey(rtMatchPairs[i]);
+    if (!rtSolved.includes(k)) { rtSolved.push(k); rtSaveSolved(); }
+    rtMatchSelected = null;
+    rtMatchWrong = [];
+    renderRtMatchChips();
+    renderRtMatchArea();
+  } else {
+    // غلط ✗
+    rtMatchMistakes++;
+    rtMatchWrong = [rtMatchSelected, i];
+    renderRtMatchArea();
+    setTimeout(() => { rtMatchWrong = []; rtMatchSelected = null; renderRtMatchArea(); }, 700);
+  }
+}
+
+function renderRtMatchArea() {
+  const box = document.getElementById('rtMatchArea');
+  if (!box) return;
+  rtLoadSolved();
+
+  const total = rtMatchPairs.length;
+  const matched = rtMatchDone.length;
+  const isLec = rtMatchFilter !== 'all';
+  const lecName = rtLecLabel(rtMatchFilter);
+
+  // ── شريط تقدّم المحاضرة ──
+  const doneCount = isLec ? rtLecDone(rtMatchFilter) : rtAllDone();
+  const totalCount = isLec ? rtLecTotal(rtMatchFilter) : MATCH_PAIRS.length;
+  const pct = totalCount ? Math.round((doneCount / totalCount) * 100) : 0;
+  const progHtml = `
+    <div class="essay-progress-wrap">
+      <div class="essay-progress-top">
+        <span>${isLec ? lecName + ': ' : 'كل المواضيع: '}خلصت <strong style="color:#10b981;">${doneCount}</strong> من ${totalCount} مصطلح</span>
+        <span style="color:#10b981; font-weight:900;">${pct}%</span>
+      </div>
+      <div class="essay-progress-bar"><div class="essay-progress-fill" style="width:${pct}%"></div></div>
+    </div>`;
+
+  // ── المحاضرة خلصت كلها ──
+  if (total === 0) {
+    box.innerHTML = progHtml + `
+      <div class="rt-card" style="text-align:center;">
+        <div style="font-size:2.6rem; margin-bottom:6px;">🎉</div>
+        <div style="font-weight:800; font-size:1rem; color:var(--text); margin-bottom:8px;">خلّصت كل مصطلحات ${lecName}!</div>
+        <p style="font-size:.8rem; color:var(--muted); line-height:1.7; margin-bottom:14px;">${totalCount} مصطلح — تحب تراجعها من الأول؟</p>
+        <button class="rt-btn green" onclick="startRtMatchRound(true)">🔁 راجع الموضوع من الأول</button>
+      </div>`;
+    return;
+  }
+
+  let termsHtml = '';
+  rtMatchTermOrder.forEach(i => {
+    if (rtMatchDone.includes(i)) return;
+    const cls = 'rt-term'
+      + (rtMatchSelected === i ? ' sel' : '')
+      + (rtMatchWrong.includes(i) ? ' wrong' : '');
+    termsHtml += `<div class="${cls}" onclick="rtPickTerm(${i})">
+        ${escapeEssayText(rtMatchPairs[i].term)}
+        <span style="display:block; font-size:0.66rem; font-weight:600; opacity:.75; direction:rtl; margin-top:2px;">${escapeEssayText(rtMatchPairs[i].ar || '')}</span>
+      </div>`;
+  });
+
+  let defsHtml = '';
+  rtMatchDefOrder.forEach(i => {
+    if (rtMatchDone.includes(i)) return;
+    const cls = 'rt-def' + (rtMatchWrong.includes(i) ? ' wrong' : '');
+    defsHtml += `<div class="${cls}" onclick="rtPickDef(${i})">${escapeEssayText(rtMatchPairs[i].def)}</div>`;
+  });
+
+  let matchedHtml = '';
+  if (matched > 0) {
+    matchedHtml = `<div class="rt-section-label">✅ اتوصلوا صح (${matched}/${total}):</div>`;
+    rtMatchDone.forEach(i => {
+      matchedHtml += `<div class="rt-step ok" style="cursor:default;">
+          <div class="rt-num">✓</div>
+          <div class="rt-txt">
+            <div class="rt-en">${escapeEssayText(rtMatchPairs[i].term)}</div>
+            <div class="rt-ar">${escapeEssayText(rtMatchPairs[i].def)}</div>
+          </div>
+        </div>`;
+    });
+  }
+
+  let finished = '';
+  if (matched === total) {
+    const stars = rtMatchMistakes === 0 ? '⭐⭐⭐' : (rtMatchMistakes <= 2 ? '⭐⭐' : '⭐');
+    const lecComplete = isLec && rtLecDone(rtMatchFilter) >= rtLecTotal(rtMatchFilter);
+    const headline = lecComplete
+      ? `🎉 خلّصت <strong>كل مصطلحات ${lecName}</strong> (${totalCount}/${totalCount})!`
+      : (isLec ? '🎉 خلّصت الجولة — ولسه فيه مصطلحات تانية في الموضوع' : '🎉 خلّصت الجولة!');
+    const action = isLec
+      ? (lecComplete
+          ? `<button class="rt-btn green" onclick="startRtMatchRound(true)">🔁 راجع الموضوع من الأول</button>`
+          : `<button class="rt-btn green" onclick="startRtMatchRound()">➡️ كمّل باقي المحاضرة</button>`)
+      : `<button class="rt-btn green" onclick="startRtMatchRound()">🔄 جولة جديدة</button>`;
+    finished = `
+      <div class="rt-feedback good" style="margin-bottom:14px;">
+        ${headline} ${stars}<br>
+        الأخطاء: ${rtMatchMistakes} — ${rtMatchMistakes === 0 ? 'ممتاز، مفيش ولا غلطة!' : 'كمّل تدريب وهتوصل للصفر 💪'}
+      </div>
+      <div class="rt-actions" style="margin-top:0;">${action}</div>`;
+  }
+
+  const bottomAction = isLec
+    ? `<button class="rt-btn ghost" onclick="startRtMatchRound(true)">🔁 إعادة المحاضرة من الأول</button>`
+    : `<button class="rt-btn ghost" onclick="startRtMatchRound()">🔄 جولة جديدة</button>`;
+
+  box.innerHTML = `
+    ${progHtml}
+
+    <div class="rt-stats">
+      <div class="rt-stat"><div class="n">${matched}/${total}</div><div class="l">اتوصلوا (الجولة)</div></div>
+      <div class="rt-stat"><div class="n" style="color:#ef4444;">${rtMatchMistakes}</div><div class="l">أخطاء</div></div>
+      <div class="rt-stat"><div class="n">${total - matched}</div><div class="l">باقي في الجولة</div></div>
+    </div>
+
+    <div class="rt-card">
+      ${finished}
+
+      ${matched < total ? `
+        <div class="rt-col-title">① دوس على المصطلح</div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">${termsHtml}</div>
+
+        <div class="rt-col-title">② دوس على التعريف الصح</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">${defsHtml}</div>
+
+        ${rtMatchSelected === null ? '<div style="font-size:0.72rem; color:var(--muted); font-weight:700; margin-top:10px; text-align:left;">👆 اختار مصطلح الأول بعدين اختار التعريف بتاعه</div>' : '<div style="font-size:0.72rem; color:var(--primary-dark); font-weight:800; margin-top:10px; text-align:left;">✔ اخترت: ' + escapeEssayText(rtMatchPairs[rtMatchSelected].term) + ' — دوّر على التعريف</div>'}
+      ` : ''}
+
+      ${matchedHtml}
+
+      <div class="rt-actions">
+        ${bottomAction}
+      </div>
+    </div>`;
+}
+
+const RT_LECS = [
+  { id: 'L1', label: '🔑 Algorithms & Hashing', sec: 'L1' },
+  { id: 'L2', label: '🧬 Sequences & Dogma', sec: 'L2' },
+  { id: 'L3', label: '📚 Course Info', sec: 'L3' }
+];
+// عدد أسئلة "إجابة ليست الأطول" — يتحسب من البنك نفسه
+function updateNotLongestCount() {
+  const el = document.getElementById('notLongestCount');
+  if (!el) return;
+  const n = QUESTIONS.filter(q => {
+    const lens = q.opts.map(o => o.length);
+    return q.opts[q.ans].length < Math.max(...lens);
+  }).length;
+  el.textContent = n;
+}
+
+function updateHomeExtras() {
+  const essayLbl = document.getElementById('essayBankCountLabel');
+  if (essayLbl) {
+    const aiCount = ESSAY_QUESTIONS.filter(x => x.ai).length;
+    essayLbl.textContent = `${ESSAY_QUESTIONS.length} سؤال AI — متوقع في الامتحان`;
+  }
+  const rtLbl = document.getElementById('retentionCountLabel');
+  if (rtLbl) {
+    const sets = ORDER_SETS.length;
+    const pairs = MATCH_PAIRS.length;
+    rtLbl.textContent = `${sets} مجموعات ترتيب + ${pairs} مصطلح`;
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initLocalStorage();
+  initEssayLocalStorage();
+  updateNotLongestCount();
+  updateHomeExtras();
+});
+</script>
+<!-- ==========================================================
+     📊 عدّاد الزوّار (GoatCounter) — اختياري
+     1) اعمل حساب مجاني من https://www.goatcounter.com
+     2) بدّل YOURCODE بكود حسابك
+     3) امسح السطر الأول (فتح التعليق) والسطر الأخير (قفل التعليق) لتفعيله
+     ملاحظة: وهو معلّق كده مش بيأثر على شكل أو سرعة الصفحة.
+<script data-goatcounter="https://YOURCODE.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+-->
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57ebd570f073169',t:'MTc5NDI0NzQ2Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57ebd570f073169',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
